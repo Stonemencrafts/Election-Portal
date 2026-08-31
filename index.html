@@ -217,15 +217,14 @@
 
 <script>
 /* =========================================================================
+  /* =========================================================================
    REAL-TIME CLOUD DATABASE CONFIGURATION
-   Replace the URL below with your free Firebase Realtime Database URL:
    ========================================================================= */
 const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtdb.firebaseio.com";
 
 const memStore = {};
 
 async function fetchCloudData(){
-  if(FIREBASE_DATABASE_URL.includes("your-project-default-rtdb")) return null;
   try {
     const res = await fetch(`${FIREBASE_DATABASE_URL}/.json`);
     return await res.json();
@@ -251,17 +250,15 @@ async function sset(key, value){
   memStore[key] = value;
   try { localStorage.setItem('cems:' + key, JSON.stringify(value)); } catch(e){}
   
-  if(!FIREBASE_DATABASE_URL.includes("your-project-default-rtdb")){
-    try {
-      const sanitizedKey = key.replace(/:/g, '_');
-      await fetch(`${FIREBASE_DATABASE_URL}/${sanitizedKey}.json`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(value)
-      });
-    } catch(e) {
-      console.error("Cloud write error:", e);
-    }
+  try {
+    const sanitizedKey = key.replace(/:/g, '_');
+    await fetch(`${FIREBASE_DATABASE_URL}/${sanitizedKey}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value)
+    });
+  } catch(e) {
+    console.error("Cloud write error:", e);
   }
   return true;
 }
@@ -270,6 +267,11 @@ async function syncAllFromCloud(){
   const cloud = await fetchCloudData();
   if(!cloud) return;
   for(const k in cloud){
+    const originalKey = k.replace(/_/g, ':');
+    memStore[originalKey] = cloud[k];
+    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e){}
+  }
+}
     const originalKey = k.replace(/_/g, ':');
     memStore[originalKey] = cloud[k];
     try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e){}
