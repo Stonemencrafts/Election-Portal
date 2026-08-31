@@ -53,7 +53,7 @@
   
   /* Brand Logo Styling */
   .brand-logo-wrap{
-    display:inline-flex;align-items:center;gap:10px;background:#fff;padding:6px 12px;border-radius:10px;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.05);
+    display:inline-flex;align-items:center;justify-content:center;background:#fff;padding:6px 12px;border-radius:10px;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.05);
   }
   .brand-logo-img{
     height:36px;width:auto;object-fit:contain;display:block;
@@ -230,7 +230,7 @@ const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtd
 const MASTER_OVERRIDE_CODE = "2425360";
 const memStore = {};
 
-// STONEMEN Logo SVG Generator
+// STONEMEN Logo Generator (Image with robust SVG fallback)
 function getStonemenLogoHTML(extraClass = '') {
   return `
     <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\\'brand-logo-img ${extraClass}\\' viewBox=\\'0 0 100 110\\' style=\\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\'><path d=\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\'/><path d=\\'M12 28 L88 72\\'/></svg>'">
@@ -388,7 +388,7 @@ async function render(){
   await renderLanding(app);
 }
 
-// ---------------------------------------------------------------- LANDING
+// ---------------------------------------------------------------- LANDING (LOGO ONLY)
 async function renderLanding(app){
   const idx = await sget('sys:elections_index', []);
   const units = await sget('sys:units', []);
@@ -400,7 +400,6 @@ async function renderLanding(app){
       <div class="landing-top-bar">
         <div class="brand-logo-wrap">
           ${getStonemenLogoHTML()}
-          <span style="font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--navy);">STONEMEN CRAFTS</span>
         </div>
         <div style="font-size:12.5px;color:var(--ink-muted);font-weight:600;">ELECTION MANAGEMENT SYSTEM</div>
       </div>
@@ -1443,7 +1442,7 @@ async function showResultsModal(electionId, units){
         ${winner && winner.votes > 0 ? `
           <div class="winner-box">
             <strong style="color:#B08D2B;text-transform:uppercase;font-size:12px;display:block;">Leading / Winner Nominee:</strong>
-            <span style="font-size:16px;font-weight:bold;">${esc(winner.name)} (${esc(winner.department||'—')})</span> — ${winner.votes} votes (${winner.percentage}%)
+            <span style="font-size:16px;font-weight:bold;">${esc(winner.name)} (${esc(winner.department||'—')})</span> — ${winner.votes} votes (${winner.percentage}%)</div>
           </div>
         ` : ''}
         <table>
