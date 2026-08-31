@@ -88,6 +88,8 @@
   .btn-outline:hover{border-color:var(--navy-2);}
   .btn-danger{background:var(--danger);color:#fff;}
   .btn-danger:hover{background:#8f1e18;}
+  .btn-amber{background:var(--amber);color:#fff;}
+  .btn-amber:hover{background:#734b00;}
   .btn-full{width:100%;}
   .btn-sm{padding:7px 12px;font-size:13px;border-radius:7px;}
   .btn:disabled{opacity:.45;cursor:not-allowed;}
@@ -233,7 +235,7 @@ const memStore = {};
 // STONEMEN Logo Generator (Image with robust SVG fallback)
 function getStonemenLogoHTML(extraClass = '') {
   return `
-    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\\'brand-logo-img ${extraClass}\\' viewBox=\\'0 0 100 110\\' style=\\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\'><path d=\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\'/><path d=\\'M12 28 L88 72\\'/></svg>'">
+    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\'brand-logo-img ${extraClass}\' viewBox=\'0 0 100 110\' style=\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\'><path d=\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\'/><path d=\'M12 28 L88 72\'/></svg>'">
   `;
 }
 
@@ -274,6 +276,17 @@ async function sset(key, value) {
     console.error("Cloud write error:", e);
   }
   return true;
+}
+
+async function sdel(key) {
+  delete memStore[key];
+  try { localStorage.removeItem('cems:' + key); } catch(e) {}
+  try {
+    const safeKey = encodeURIComponent(key);
+    await fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, { method: 'DELETE' });
+  } catch(e) {
+    console.error("Cloud delete error:", e);
+  }
 }
 
 async function syncAllFromCloud() {
@@ -1166,7 +1179,8 @@ function renderOtpResetView(app){
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       otpSession = { active:true, step:'verify', generatedOtp:otp, targetAdmin:a };
       toast(`[OTP]: Code is ${otp} (Override: ${MASTER_OVERRIDE_CODE})`);
-      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}\n(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
+      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}
+(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
       render();
     });
   } else if(otpSession.step === 'verify'){
@@ -1261,28 +1275,59 @@ async function renderResultShell(app){
   bindResultEvents(units);
 }
 
+// Elections & Results View with Deactivation, Reactivation & Bulk Delete
 async function resultOverviewHTML(idx, units){
   const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
   return `
     <div class="page-head">
-      <div><h1>Elections &amp; Results</h1><p>System-wide monitoring, live results, CSV and PDF report exports.</p></div>
+      <div><h1>Elections &amp; Ballot Management</h1><p>Control ballot statuses, deactivate active voting, or permanently remove selected ballots.</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger btn-sm" id="delete-selected-elections-btn">Delete Selected Ballots</button>
+      </div>
     </div>
     <div class="card">
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="select-all-elections" style="cursor:pointer;width:16px;height:16px;">
+        <label for="select-all-elections" style="font-size:13px;font-weight:600;cursor:pointer;">Select All Ballots</label>
+      </div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Election</th><th>Unit</th><th>Date</th><th>Status</th><th>Nominees</th><th style="text-align:right;">Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th style="width:36px;"></th>
+            <th>Election</th>
+            <th>Unit</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Nominees</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
         <tbody>
-          ${idx.length? idx.map(e=>`
+          ${idx.length? idx.map(e=>{
+            const currStatus = computedStatus(e);
+            return `
             <tr>
-              <td><b>${esc(e.electionTitle)}</b><div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName||'')}</div></td>
+              <td>
+                <input type="checkbox" class="election-checkbox" data-elec-id="${e.id}" style="cursor:pointer;width:16px;height:16px;">
+              </td>
+              <td>
+                <b>${esc(e.electionTitle)}</b>
+                <div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName||'')}</div>
+              </td>
               <td><span class="tag-unit">${esc(unitName(e.unitId))}</span></td>
               <td>${fmtDate(e.electionDate)}</td>
-              <td>${statusBadge(computedStatus(e))}</td>
+              <td>${statusBadge(currStatus)}</td>
               <td>${e.nomineeCount||0}</td>
               <td style="text-align:right;white-space:nowrap;">
-                <button class="btn btn-gold btn-sm" data-view-results="${e.id}">📊 View &amp; Download Results</button>
+                <button class="btn btn-gold btn-sm" data-view-results="${e.id}">📊 Results</button>
+                ${currStatus === 'deactivated' ? 
+                  `<button class="btn btn-outline btn-sm" data-reactivate-elec="${e.id}" style="color:var(--success);border-color:var(--success);">▶ Reactivate</button>` :
+                  `<button class="btn btn-amber btn-sm" data-deactivate-elec="${e.id}">⏸ Deactivate</button>`
+                }
+                <button class="btn btn-danger btn-sm" data-delete-elec="${e.id}">✕</button>
               </td>
             </tr>
-          `).join('') : `<tr><td colspan="6"><div class="empty-state">No elections created.</div></td></tr>`}
+          `}).join('') : `<tr><td colspan="7"><div class="empty-state">No elections created.</div></td></tr>`}
         </tbody>
       </table></div>
     </div>
@@ -1381,7 +1426,8 @@ async function showResultsModal(electionId, units){
 
   // Export CSV Action
   document.getElementById('download-csv-btn').addEventListener('click', () => {
-    let csv = `\uFEFFRank,Nominee Name,Card No,Department,Designation,Votes,Percentage\n`;
+    let csv = `﻿Rank,Nominee Name,Card No,Department,Designation,Votes,Percentage
+`;
     sortedNominees.forEach((n, idx) => {
       const row = [
         idx + 1,
@@ -1392,7 +1438,8 @@ async function showResultsModal(electionId, units){
         n.votes,
         `"${n.percentage}%"`
       ];
-      csv += row.join(',') + '\n';
+      csv += row.join(',') + '
+';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -1442,7 +1489,7 @@ async function showResultsModal(electionId, units){
         ${winner && winner.votes > 0 ? `
           <div class="winner-box">
             <strong style="color:#B08D2B;text-transform:uppercase;font-size:12px;display:block;">Leading / Winner Nominee:</strong>
-            <span style="font-size:16px;font-weight:bold;">${esc(winner.name)} (${esc(winner.department||'—')})</span> — ${winner.votes} votes (${winner.percentage}%)</div>
+            <span style="font-size:16px;font-weight:bold;">${esc(winner.name)} (${esc(winner.department||'—')})</span> — ${winner.votes} votes (${winner.percentage}%)
           </div>
         ` : ''}
         <table>
@@ -1615,6 +1662,100 @@ function bindResultEvents(units){
       const nav = btn.getAttribute('data-rnav');
       if(nav==='logout'){ addAudit(session.result.username,'LOGOUT','Admin portal'); session.result=null; location.hash='#/results'; render(); return; }
       resultState.view = nav;
+      render();
+    });
+  });
+
+  // Select all elections
+  const selectAllElecs = document.getElementById('select-all-elections');
+  if(selectAllElecs){
+    selectAllElecs.addEventListener('change', (ev)=>{
+      document.querySelectorAll('.election-checkbox').forEach(cb => cb.checked = ev.target.checked);
+    });
+  }
+
+  // Deactivate Election
+  document.querySelectorAll('[data-deactivate-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-deactivate-elec');
+      const e = await sget('election:'+id);
+      if(!e) return;
+      if(!confirm(`Deactivate ballot for "${e.electionTitle}"? Employees will not be able to vote.`)) return;
+      
+      e.status = 'deactivated';
+      await sset('election:'+id, e);
+      
+      const idx = await sget('sys:elections_index', []);
+      const item = idx.find(x=>x.id===id);
+      if(item) { item.status = 'deactivated'; await sset('sys:elections_index', idx); }
+      
+      await addAudit(session.result.username, 'ELECTION_DEACTIVATED', e.electionTitle);
+      toast('Ballot box deactivated.');
+      render();
+    });
+  });
+
+  // Reactivate Election
+  document.querySelectorAll('[data-reactivate-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-reactivate-elec');
+      const e = await sget('election:'+id);
+      if(!e) return;
+      
+      e.status = new Date(e.votingStart).getTime() > Date.now() ? 'scheduled' : 'active';
+      await sset('election:'+id, e);
+      
+      const idx = await sget('sys:elections_index', []);
+      const item = idx.find(x=>x.id===id);
+      if(item) { item.status = e.status; await sset('sys:elections_index', idx); }
+      
+      await addAudit(session.result.username, 'ELECTION_REACTIVATED', e.electionTitle);
+      toast('Ballot box reactivated.');
+      render();
+    });
+  });
+
+  // Delete Single Election
+  document.querySelectorAll('[data-delete-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-delete-elec');
+      const idx = await sget('sys:elections_index', []);
+      const target = idx.find(x=>x.id===id);
+      if(!confirm(`Permanently delete ballot box "${target?target.electionTitle:'this election'}" and all its votes?`)) return;
+      
+      await sdel('election:'+id);
+      await sdel('votes:'+id);
+      
+      const newIdx = idx.filter(x=>x.id!==id);
+      await sset('sys:elections_index', newIdx);
+      
+      await addAudit(session.result.username, 'ELECTION_DELETED', target?target.electionTitle:id);
+      toast('Ballot box permanently deleted.');
+      render();
+    });
+  });
+
+  // Bulk Delete Selected Elections
+  const deleteSelectedElecsBtn = document.getElementById('delete-selected-elections-btn');
+  if(deleteSelectedElecsBtn){
+    deleteSelectedElecsBtn.addEventListener('click', async ()=>{
+      const checked = Array.from(document.querySelectorAll('.election-checkbox:checked'));
+      if(!checked.length){ toast('No ballot boxes selected.'); return; }
+      if(!confirm(`Permanently delete ${checked.length} selected ballot box(es) and all their votes?`)) return;
+      
+      const idx = await sget('sys:elections_index', []);
+      const idsToDelete = new Set(checked.map(cb => cb.getAttribute('data-elec-id')));
+      
+      for(const id of idsToDelete){
+        await sdel('election:'+id);
+        await sdel('votes:'+id);
+      }
+      
+      const newIdx = idx.filter(x=>!idsToDelete.has(x.id));
+      await sset('sys:elections_index', newIdx);
+      
+      await addAudit(session.result.username, 'ELECTIONS_BULK_DELETED', `${idsToDelete.size} ballot box(es)`);
+      toast('Selected ballot boxes deleted.');
       render();
     });
   });
