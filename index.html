@@ -51,7 +51,6 @@
     box-shadow:0 20px 60px -20px rgba(0,0,0,.5);padding:36px 32px;
   }
   
-  /* Brand Logo Styling */
   .brand-logo-wrap{
     display:inline-flex;align-items:center;justify-content:center;background:#fff;padding:6px 12px;border-radius:10px;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.05);
   }
@@ -232,17 +231,16 @@ const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtd
 const MASTER_OVERRIDE_CODE = "2425360";
 const memStore = {};
 
-function getStonemenLogoHTML(extraClass = '') {
-  return `
-    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\\'brand-logo-img ${extraClass}\\' viewBox=\\'0 0 100 110\\' style=\\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\'><path d=\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\'/><path d=\\'M12 28 L88 72\\'/></svg>'">
-  `;
+function getStonemenLogoHTML(extraClass) {
+  extraClass = extraClass || '';
+  return '<img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ' + extraClass + '" onerror="this.outerHTML=\'<svg class=\\\'brand-logo-img ' + extraClass + '\\\' viewBox=\\\'0 0 100 110\\\' style=\\\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\\'><path d=\\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\\'/><path d=\\\'M12 28 L88 72\\\'/></svg>\'">';
 }
 
 async function fetchCloudData() {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 3500);
   try {
-    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json?t=${Date.now()}`, { signal: controller.signal });
+    const res = await fetch(FIREBASE_DATABASE_URL + '/.json?t=' + Date.now(), { signal: controller.signal });
     clearTimeout(timeoutId);
     return await res.json();
   } catch(e) {
@@ -251,7 +249,8 @@ async function fetchCloudData() {
   }
 }
 
-async function sget(key, fallback = null) {
+async function sget(key, fallback) {
+  fallback = (fallback === undefined) ? null : fallback;
   if (memStore[key] !== undefined && memStore[key] !== null) return memStore[key];
   try {
     const raw = localStorage.getItem('cems:' + key);
@@ -266,14 +265,13 @@ async function sget(key, fallback = null) {
 async function sset(key, value) {
   memStore[key] = value;
   try { localStorage.setItem('cems:' + key, JSON.stringify(value)); } catch(e) {}
-  
   try {
     const safeKey = encodeURIComponent(key);
-    fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, {
+    fetch(FIREBASE_DATABASE_URL + '/' + safeKey + '.json', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(value)
-    }).catch(()=>{});
+    }).catch(function(){});
   } catch(e) {}
   return true;
 }
@@ -283,7 +281,7 @@ async function sdel(key) {
   try { localStorage.removeItem('cems:' + key); } catch(e) {}
   try {
     const safeKey = encodeURIComponent(key);
-    fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, { method: 'DELETE' }).catch(()=>{});
+    fetch(FIREBASE_DATABASE_URL + '/' + safeKey + '.json', { method: 'DELETE' }).catch(function(){});
   } catch(e) {}
 }
 
@@ -1183,8 +1181,8 @@ function renderOtpResetView(app){
       }
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       otpSession = { active:true, step:'verify', generatedOtp:otp, targetAdmin:a };
-      toast(`[OTP]: Code is ${otp} (Override: ${MASTER_OVERRIDE_CODE})`);
-      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}\n(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
+      toast('[OTP]: Code is ' + otp + ' (Override: ' + MASTER_OVERRIDE_CODE + ')');
+      alert('[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ' + otp + '\n(Master Override Code: ' + MASTER_OVERRIDE_CODE + ')');
       render();
     });
   } else if(otpSession.step === 'verify'){
@@ -1357,7 +1355,7 @@ async function showResultsModal(electionId, units){
   const sortedNominees = (e.nominees||[]).map(n => {
     const vCount = counts[n.id] || 0;
     const pct = totalVotes > 0 ? ((vCount / totalVotes) * 100).toFixed(1) : '0.0';
-    return { ...n, votes: vCount, percentage: pct };
+    return Object.assign({}, n, { votes: vCount, percentage: pct });
   }).sort((a,b) => b.votes - a.votes);
 
   const winner = sortedNominees.length > 0 && totalVotes > 0 ? sortedNominees[0] : null;
@@ -1430,16 +1428,16 @@ async function showResultsModal(electionId, units){
 
   // Export CSV Action
   document.getElementById('download-csv-btn').addEventListener('click', () => {
-    let csv = `\uFEFFRank,Nominee Name,Card No,Department,Designation,Votes,Percentage\n`;
+    let csv = '\uFEFFRank,Nominee Name,Card No,Department,Designation,Votes,Percentage\n';
     sortedNominees.forEach((n, idx) => {
       const row = [
         idx + 1,
-        `"${(n.name||'').replace(/"/g, '""')}"`,
-        `"${(n.cardNo||'').replace(/"/g, '""')}"`,
-        `"${(n.department||'').replace(/"/g, '""')}"`,
-        `"${(n.designation||'').replace(/"/g, '""')}"`,
+        '"' + (n.name||'').replace(/"/g, '""') + '"',
+        '"' + (n.cardNo||'').replace(/"/g, '""') + '"',
+        '"' + (n.department||'').replace(/"/g, '""') + '"',
+        '"' + (n.designation||'').replace(/"/g, '""') + '"',
         n.votes,
-        `"${n.percentage}%"`
+        '"' + n.percentage + '%"'
       ];
       csv += row.join(',') + '\n';
     });
