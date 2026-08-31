@@ -272,11 +272,10 @@ async function syncAllFromCloud(){
     try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e){}
   }
 }
-    const originalKey = k.replace(/_/g, ':');
-    memStore[originalKey] = cloud[k];
-    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e){}
-  }
-}
+   window.addEventListener('focus', async () => {
+  await syncAllFromCloud();
+  render();
+});
 
 function uid(prefix){ return prefix+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4); }
 function makeSlug(){ return Math.random().toString(36).slice(2,10); }
