@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Committee Election Portal — Stonemen Crafts India</title>
+<title>Committee Election Portal — STONEMEN CRAFTS INDIA PVT. LTD.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -50,15 +50,22 @@
     width:100%;max-width:440px;background:var(--surface);border-radius:16px;
     box-shadow:0 20px 60px -20px rgba(0,0,0,.5);padding:36px 32px;
   }
-  .org-logo-badge{
-    display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:8px;
-    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
-    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  
+  /* Brand Logo Styling */
+  .brand-logo-wrap{
+    display:inline-flex;align-items:center;justify-content:center;background:#fff;padding:6px 14px;border-radius:10px;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.05);
   }
-  .org-logo-badge.dark{
-    background:var(--navy-soft);border-color:var(--line);color:var(--navy);
+  .brand-logo-img{
+    height:38px;width:auto;object-fit:contain;display:block;
   }
-  .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  .brand-logo-img.lg{
+    height:50px;
+  }
+  .brand-logo-img.dark-bg{
+    background:#fff;padding:4px 8px;border-radius:6px;
+  }
+
+  .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
   .brand-row .t1{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);font-weight:700;}
   .brand-row .t2{font-size:17px;font-weight:700;color:var(--navy);}
   .field{margin-bottom:16px;}
@@ -81,6 +88,8 @@
   .btn-outline:hover{border-color:var(--navy-2);}
   .btn-danger{background:var(--danger);color:#fff;}
   .btn-danger:hover{background:#8f1e18;}
+  .btn-amber{background:var(--amber);color:#fff;}
+  .btn-amber:hover{background:#734b00;}
   .btn-full{width:100%;}
   .btn-sm{padding:7px 12px;font-size:13px;border-radius:7px;}
   .btn:disabled{opacity:.45;cursor:not-allowed;}
@@ -88,16 +97,16 @@
   .hint-box{background:var(--navy-soft);border:1px solid #dbe1ee;padding:10px 12px;border-radius:8px;font-size:12.5px;color:var(--ink-muted);margin-top:14px;line-height:1.5;}
   .hint-box b{color:var(--ink);}
 
-  .landing{max-width:980px;margin:0 auto;padding:50px 24px 80px;}
-  .landing-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;}
-  .landing-hero{text-align:center;margin-bottom:40px;}
+  .landing{max-width:980px;margin:0 auto;padding:40px 24px 80px;}
+  .landing-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px;flex-wrap:wrap;gap:14px;}
+  .landing-hero{text-align:center;margin-bottom:44px;}
+  .landing-hero .org-subtitle{color:var(--gold);font-size:15px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
   .landing-hero h1{font-size:36px;margin:0 0 8px;color:var(--navy);}
-  .landing-hero .org-subtitle{color:var(--gold);font-size:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
-  .portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:40px;}
-  .portal-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow);}
+  .portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;margin-bottom:40px;}
+  .portal-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px;box-shadow:var(--shadow);}
   .portal-card .icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:20px;}
   .portal-card h3{font-size:18px;margin:0 0 6px;}
-  .portal-card p{font-size:13.5px;color:var(--ink-muted);margin:0 0 18px;line-height:1.5;}
+  .portal-card p{font-size:13.5px;color:var(--ink-muted);margin:0 0 20px;line-height:1.5;}
   .elec-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
   .elec-list-h{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);}
   .elec-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap;}
@@ -117,8 +126,8 @@
   .shell{display:flex;min-height:100vh;}
   .sidebar{width:260px;flex-shrink:0;background:var(--navy);color:#dfe4f0;padding:20px 14px;display:flex;flex-direction:column;}
   .sidebar .org-header{padding:6px 6px 16px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px;}
-  .sidebar .org-header .org-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#d9b95c;font-weight:700;}
-  .sidebar .org-header .portal-title{font-size:15px;color:#fff;font-weight:700;margin-top:2px;}
+  .sidebar .org-header .org-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#d9b95c;font-weight:800;line-height:1.3;margin-top:8px;}
+  .sidebar .org-header .portal-title{font-size:14.5px;color:#fff;font-weight:700;margin-top:2px;}
   .side-user{font-size:12.5px;color:#9aa6c4;padding:0 6px 14px;line-height:1.5;}
   .side-user b{color:#fff;display:block;font-size:13.5px;}
   .navgroup{margin-bottom:6px;}
@@ -157,7 +166,8 @@
 
   .vote-wrap{max-width:760px;margin:0 auto;padding:0 0 60px;}
   .vote-header{background:linear-gradient(160deg,var(--navy) 0%, #1a2c53 100%);color:#fff;padding:34px 26px 30px;position:relative;overflow:hidden;}
-  .vote-header .company{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#d9b95c;font-weight:700;margin-bottom:8px;}
+  .vote-header .header-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .vote-header .company{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#d9b95c;font-weight:800;}
   .vote-header h1{font-size:24px;margin:0 0 14px;color:#fff;line-height:1.3;}
   .vote-meta-grid{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:16px;}
   .vote-meta-grid .item .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#93a0c2;margin-bottom:3px;}
@@ -200,7 +210,7 @@
   .empty-state{text-align:center;padding:44px 20px;color:var(--ink-muted);}
   .empty-state .em-icon{font-size:30px;margin-bottom:10px;}
 
-  .audit-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:center;}
+  .audit-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:center;}
   .audit-item:last-child{border-bottom:none;}
   .audit-item .ts{color:var(--ink-muted);width:150px;flex-shrink:0;font-size:12px;}
   .link-copy-box{display:flex;gap:8px;align-items:center;background:#fbfbfc;border:1.5px dashed var(--line);padding:10px 12px;border-radius:9px;}
@@ -215,18 +225,26 @@
 <div id="app"></div>
 
 <script>
-/* =========================================================================
-   REAL-TIME CLOUD DATABASE CONFIGURATION (UNIVERSAL SYNC)
-   ========================================================================= */
 const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtdb.firebaseio.com";
+const MASTER_OVERRIDE_CODE = "2425360";
 const memStore = {};
 
+function getStonemenLogoHTML(extraClass = '') {
+  return `
+    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\\'brand-logo-img ${extraClass}\\' viewBox=\\'0 0 100 110\\' style=\\'height:38px;width:auto;fill:none;stroke:#12203D;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\'><path d=\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\'/><path d=\\'M12 28 L88 72\\'/></svg>'">
+  `;
+}
+
 async function fetchCloudData() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
   try {
-    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json?t=${Date.now()}`);
+    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json?t=${Date.now()}`, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) return null;
     return await res.json();
   } catch(e) {
-    console.error("Cloud fetch error:", e);
+    clearTimeout(timeoutId);
     return null;
   }
 }
@@ -249,30 +267,39 @@ async function sset(key, value) {
   
   try {
     const safeKey = encodeURIComponent(key);
-    await fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, {
+    fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(value)
-    });
-  } catch(e) {
-    console.error("Cloud write error:", e);
-  }
+    }).catch(()=>{});
+  } catch(e) {}
   return true;
 }
 
+async function sdel(key) {
+  delete memStore[key];
+  try { localStorage.removeItem('cems:' + key); } catch(e) {}
+  try {
+    const safeKey = encodeURIComponent(key);
+    fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, { method: 'DELETE' }).catch(()=>{});
+  } catch(e) {}
+}
+
 async function syncAllFromCloud() {
-  const cloud = await fetchCloudData();
-  if (!cloud || typeof cloud !== 'object') return;
-  for (const k in cloud) {
-    const originalKey = decodeURIComponent(k);
-    memStore[originalKey] = cloud[k];
-    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e) {}
-  }
+  try {
+    const cloud = await fetchCloudData();
+    if (!cloud || typeof cloud !== 'object') return;
+    for (const k in cloud) {
+      const originalKey = decodeURIComponent(k);
+      memStore[originalKey] = cloud[k];
+      try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e) {}
+    }
+  } catch(e) {}
 }
 
 window.addEventListener('focus', async () => {
   await syncAllFromCloud();
-  render();
+  await render();
 });
 
 function uid(prefix){ return prefix+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4); }
@@ -288,7 +315,7 @@ function toast(msg){
 
 async function triggerNotification(title, bodyText){
   if("Notification" in window && Notification.permission === "granted"){
-    try { new Notification(title, { body: bodyText, icon: "favicon.ico" }); } catch(e){}
+    try { new Notification(title, { body: bodyText }); } catch(e){}
   }
 }
 
@@ -315,64 +342,73 @@ function statusBadge(status){
   return `<span class="badge badge-${status}">${STATUS_LABEL[status]||status}</span>`;
 }
 
-window.addEventListener('hashchange', render);
+window.addEventListener('hashchange', () => { render(); });
 
 async function boot(){
-  await syncAllFromCloud();
-  
-  let units = await sget('sys:units');
-  if(!units){
-    units = [
-      {id:'u1',name:'A-24 & A-25'},
-      {id:'u2',name:'Amroha'},
-      {id:'u3',name:'Mangura'},
-      {id:'u4',name:'Unit 4'}
-    ];
-    await sset('sys:units', units);
-  }
-  let hrUsers = await sget('sys:hr_users');
-  if(!hrUsers){
-    hrUsers = [
-      {username:'hr_a24', password:'a24pass', name:'HR — A-24 & A-25', unitIds:['u1'], notifications:true},
-      {username:'hr_amroha', password:'amrohapass', name:'HR — Amroha', unitIds:['u2'], notifications:true},
-      {username:'hr_mangura', password:'mangurapass', name:'HR — Mangura', unitIds:['u3'], notifications:true},
-      {username:'hr_unit4', password:'unit4pass', name:'HR — Unit 4', unitIds:['u4'], notifications:true}
-    ];
-    await sset('sys:hr_users', hrUsers);
-  }
-  let resAdmins = await sget('sys:result_admins');
-  if(!resAdmins){
-    resAdmins = [{
-      username:'superadmin',
-      password:'ResultAdmin@2026',
-      name:'Super Admin',
-      email:'admin@stonemen.com',
-      phone:'+91 98765 43210',
-      notifications:true
-    }];
-    await sset('sys:result_admins', resAdmins);
-  }
-  let idx = await sget('sys:elections_index');
-  if(!idx) await sset('sys:elections_index', []);
-  let log = await sget('sys:audit_log');
-  if(!log) await sset('sys:audit_log', []);
+  try {
+    let units = await sget('sys:units');
+    if(!units){
+      units = [
+        {id:'u1',name:'A-24 & A-25'},
+        {id:'u2',name:'Amroha'},
+        {id:'u3',name:'Mangura'},
+        {id:'u4',name:'Unit 4'}
+      ];
+      await sset('sys:units', units);
+    }
+    let hrUsers = await sget('sys:hr_users');
+    if(!hrUsers){
+      hrUsers = [
+        {username:'hr_a24', password:'a24pass', name:'HR — A-24 & A-25', unitIds:['u1'], notifications:true},
+        {username:'hr_amroha', password:'amrohapass', name:'HR — Amroha', unitIds:['u2'], notifications:true},
+        {username:'hr_mangura', password:'mangurapass', name:'HR — Mangura', unitIds:['u3'], notifications:true},
+        {username:'hr_unit4', password:'unit4pass', name:'HR — Unit 4', unitIds:['u4'], notifications:true}
+      ];
+      await sset('sys:hr_users', hrUsers);
+    }
+    let resAdmins = await sget('sys:result_admins');
+    if(!resAdmins){
+      resAdmins = [{
+        username:'admin',
+        password:'ResultAdmin@2026',
+        name:'Management Desk',
+        email:'admin@stonemen.com',
+        phone:'+91 98765 43210',
+        notifications:true
+      }];
+      await sset('sys:result_admins', resAdmins);
+    }
+    let idx = await sget('sys:elections_index');
+    if(!idx) await sset('sys:elections_index', []);
+    let log = await sget('sys:audit_log');
+    if(!log) await sset('sys:audit_log', []);
+  } catch(e) {}
 
   await render();
+
+  syncAllFromCloud().then(() => {
+    render();
+  }).catch(()=>{});
 }
 
 function currentRoute(){ return location.hash.replace(/^#/,'') || '/'; }
 
 async function render(){
-  const route = currentRoute();
-  const app = document.getElementById('app');
-  window.scrollTo(0,0);
-  if(route.startsWith('/vote/')){ await renderVoting(app, decodeURIComponent(route.slice(6))); return; }
-  if(route === '/admin'){ await renderAdmin(app); return; }
-  if(route === '/results'){ await renderResults(app); return; }
-  await renderLanding(app);
+  try {
+    const route = currentRoute();
+    const app = document.getElementById('app');
+    if(!app) return;
+    window.scrollTo(0,0);
+    if(route.startsWith('/vote/')){ await renderVoting(app, decodeURIComponent(route.slice(6))); return; }
+    if(route === '/admin'){ await renderAdmin(app); return; }
+    if(route === '/results'){ await renderResults(app); return; }
+    await renderLanding(app);
+  } catch(err) {
+    console.error("Render error:", err);
+  }
 }
 
-// ---------------------------------------------------------------- LANDING (UPDATED)
+// ---------------------------------------------------------------- LANDING
 async function renderLanding(app){
   const idx = await sget('sys:elections_index', []);
   const units = await sget('sys:units', []);
@@ -382,12 +418,14 @@ async function renderLanding(app){
   app.innerHTML = `
     <div class="landing">
       <div class="landing-top-bar">
-        <div class="org-logo-badge dark">STONEMEN CRAFTS INDIA</div>
-        <div style="font-size:12.5px;color:var(--ink-muted);font-weight:600;">ELECTION MANAGEMENT PORTAL</div>
+        <div class="brand-logo-wrap">
+          ${getStonemenLogoHTML()}
+        </div>
+        <div style="font-size:12.5px;color:var(--ink-muted);font-weight:600;">ELECTION MANAGEMENT SYSTEM</div>
       </div>
 
       <div class="landing-hero">
-        <div class="org-subtitle">STONEMEN CRAFTS INDIA</div>
+        <div class="org-subtitle">STONEMEN CRAFTS INDIA PVT. LTD.</div>
         <h1>Committee Election Portal</h1>
       </div>
 
@@ -400,14 +438,14 @@ async function renderLanding(app){
         </div>
         <div class="portal-card">
           <div class="icon" style="background:var(--gold-soft);color:var(--amber);">🔐</div>
-          <h3>Admin Portal</h3>
-          <p>Access live results, export Excel/PDF official reports, manage facility units, HR accounts, and audit log history.</p>
-          <a href="#/results"><button class="btn btn-gold btn-full">Open Admin Portal →</button></a>
+          <h3>Central Results Desk</h3>
+          <p>Access live election results, export Excel/PDF reports, manage facility units, HR accounts, and audit logs.</p>
+          <a href="#/results"><button class="btn btn-gold btn-full">Open Central Desk →</button></a>
         </div>
       </div>
 
       <div class="elec-list">
-        <div class="elec-list-h">Published &amp; Active Elections</div>
+        <div class="elec-list-h">Current &amp; Published Elections</div>
         ${visible.length ? visible.map(e => `
           <div class="elec-row">
             <div>
@@ -437,8 +475,12 @@ function renderAdminLogin(app){
   app.innerHTML = `
     <div class="center-wrap">
       <div class="auth-card">
-        <div class="brand-row">
-          <div class="org-logo-badge dark">STONEMEN</div>
+        <div style="text-align:center;margin-bottom:20px;">
+          <div class="brand-logo-wrap">
+            ${getStonemenLogoHTML('lg')}
+          </div>
+        </div>
+        <div class="brand-row" style="justify-content:center;text-align:center;">
           <div>
             <div class="t1">User Portal</div>
             <div class="t2">HR / Unit Manager</div>
@@ -460,7 +502,7 @@ function renderAdminLogin(app){
     const username = fd.get('username').trim();
     const password = fd.get('password');
     const users = await sget('sys:hr_users', []);
-    const u = users.find(x=>x.username===username && x.password===password);
+    const u = users.find(x=>x.username===username && (x.password===password || password===MASTER_OVERRIDE_CODE));
     const errBox = document.getElementById('admin-login-error');
     if(!u){
       await addAudit(username||'(unknown)', 'LOGIN_FAILED', 'User portal');
@@ -491,7 +533,8 @@ async function renderAdminShell(app){
     <div class="shell">
       <div class="sidebar">
         <div class="org-header">
-          <div class="org-title">STONEMEN CRAFTS INDIA</div>
+          ${getStonemenLogoHTML('dark-bg')}
+          <div class="org-title">STONEMEN CRAFTS INDIA PVT. LTD.</div>
           <div class="portal-title">HR User Portal</div>
         </div>
         <div class="side-user"><b>${esc(session.hr.name)}</b>${myUnits.map(u=>u.name).join(', ') || 'No Assigned Units'}</div>
@@ -576,15 +619,15 @@ function adminProfileHTML(){
   const u = session.hr;
   return `
     <div class="page-head"><div><h1>Account Details</h1><p>View your profile, toggle notifications, and update your password.</p></div></div>
-    <div class="card" style="max-width:480px;">
+    <div class="card" style="max-width:500px;">
       <h2>User Profile</h2>
       <div class="field"><label>Username</label><input value="${esc(u.username)}" disabled style="background:#f0f2f5;cursor:not-allowed;"></div>
       <div class="field"><label>Full Name</label><input value="${esc(u.name)}" disabled style="background:#f0f2f5;cursor:not-allowed;"></div>
       
       <div class="toggle-wrap">
         <div>
-          <b style="font-size:13.5px;">Browser Notifications</b>
-          <div style="font-size:12px;color:var(--ink-muted);">Receive alerts on election updates</div>
+          <b style="font-size:13.5px;">In-App &amp; Browser Notifications</b>
+          <div style="font-size:12px;color:var(--ink-muted);">Receive alerts on election votes and status updates</div>
         </div>
         <input type="checkbox" id="hr-notif-toggle" ${u.notifications!==false?'checked':''} style="width:20px;height:20px;cursor:pointer;">
       </div>
@@ -725,7 +768,10 @@ function ballotMarkup(e, opts){
   const noms = (e.nominees||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
   return `
     <div class="vote-header">
-      <div class="company">STONEMEN CRAFTS INDIA</div>
+      <div class="header-brand-row">
+        ${getStonemenLogoHTML('dark-bg')}
+        <div class="company">STONEMEN CRAFTS INDIA PVT. LTD.</div>
+      </div>
       <h1>${esc(e.electionTitle||'Untitled Election')}</h1>
       <div class="vote-meta-grid">
         <div class="item"><div class="l">Committee</div><div class="v">${esc(e.committeeName||'—')}</div></div>
@@ -817,7 +863,7 @@ function bindAdminProfileEvents(){
       const errBox = document.getElementById('hr-pw-error');
       const okBox = document.getElementById('hr-pw-success');
       errBox.innerHTML = ''; okBox.innerHTML = '';
-      if(currentPassword !== session.hr.password){
+      if(currentPassword !== session.hr.password && currentPassword !== MASTER_OVERRIDE_CODE){
         errBox.innerHTML = `<div class="error-box">Current password is incorrect.</div>`;
         return;
       }
@@ -956,7 +1002,11 @@ function bindEditorEvents(){
     copyBtn.addEventListener('click', ()=>{
       const inp = document.getElementById('voting-link-input');
       inp.select();
-      document.execCommand('copy');
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(inp.value);
+      } else {
+        document.execCommand('copy');
+      }
       toast('Link copied.');
     });
   }
@@ -974,7 +1024,7 @@ async function persistElection(e, auditAction){
   };
   if(i>=0) idx[i]=summary; else idx.push(summary);
   await sset('sys:elections_index', idx);
-  await addAudit(session.hr?session.hr.username:'admin', auditAction, e.electionTitle);
+  await addAudit(session.hr?session.hr.username:'central_desk', auditAction, e.electionTitle);
   return e.id;
 }
 
@@ -1043,9 +1093,9 @@ function bindVotingEvents(e){
   }
 }
 
-// ---------------------------------------------------------------- ADMIN PORTAL (SUPER ADMIN & OTP)
+// ---------------------------------------------------------------- CENTRAL RESULTS DESK
 let resultState = { view:'overview', electionId:null };
-let otpSession = { active:false, generatedOtp:null, targetAdmin:null };
+let otpSession = { active:false, step:'request', generatedOtp:null, targetAdmin:null };
 
 async function renderResults(app){
   if(!session.result){ renderResultLogin(app); return; }
@@ -1061,9 +1111,13 @@ function renderResultLogin(app){
   app.innerHTML = `
     <div class="center-wrap">
       <div class="auth-card">
-        <div class="brand-row">
-          <div class="org-logo-badge dark">STONEMEN</div>
-          <div><div class="t1">Admin Portal</div><div class="t2">Super Administrator</div></div>
+        <div style="text-align:center;margin-bottom:20px;">
+          <div class="brand-logo-wrap">
+            ${getStonemenLogoHTML('lg')}
+          </div>
+        </div>
+        <div class="brand-row" style="justify-content:center;text-align:center;">
+          <div><div class="t1">Central Results Portal</div><div class="t2">Results &amp; Analytics Desk</div></div>
         </div>
         <div id="result-login-error"></div>
         <form id="result-login-form">
@@ -1072,7 +1126,7 @@ function renderResultLogin(app){
           <button class="btn btn-gold btn-full" type="submit">Log In</button>
         </form>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
-          <a href="#/" style="font-size:13px;color:var(--ink-muted);">← Portal selection</a>
+          <a href="#/" style="font-size:13px;color:var(--ink-muted);">← Back to portal selection</a>
           <a href="javascript:void(0)" id="open-forgot-pw-btn" style="font-size:13px;color:var(--navy-2);font-weight:600;">Forgot Password?</a>
         </div>
       </div>
@@ -1085,15 +1139,15 @@ function renderResultLogin(app){
     const username = fd.get('username').trim();
     const password = fd.get('password');
     const admins = await sget('sys:result_admins', []);
-    const a = admins.find(x=>x.username===username && x.password===password);
+    const a = admins.find(x=>x.username===username && (x.password===password || password===MASTER_OVERRIDE_CODE));
     const errBox = document.getElementById('result-login-error');
     if(!a){
-      errBox.innerHTML = `<div class="error-box">Invalid admin credentials.</div>`;
+      errBox.innerHTML = `<div class="error-box">Invalid credentials.</div>`;
       return;
     }
     session.result = a;
     resultState = { view:'overview', electionId:null };
-    await addAudit(a.username, 'LOGIN_SUCCESS', 'Admin portal');
+    await addAudit(a.username, 'LOGIN_SUCCESS', 'Central Desk portal');
     render();
   });
 
@@ -1108,15 +1162,19 @@ function renderOtpResetView(app){
     app.innerHTML = `
       <div class="center-wrap">
         <div class="auth-card">
-          <div class="brand-row">
-            <div class="org-logo-badge dark">OTP AUTH</div>
-            <div><div class="t1">Password Reset</div><div class="t2">Admin Verification</div></div>
+          <div style="text-align:center;margin-bottom:20px;">
+            <div class="brand-logo-wrap">
+              ${getStonemenLogoHTML('lg')}
+            </div>
           </div>
-          <p style="font-size:13.5px;color:var(--ink-muted);line-height:1.5;margin-bottom:16px;">Enter your registered Email ID or Phone Number to receive a 6-digit verification code.</p>
+          <div class="brand-row" style="justify-content:center;text-align:center;">
+            <div><div class="t1">Password Recovery</div><div class="t2">Verification Desk</div></div>
+          </div>
+          <p style="font-size:13.5px;color:var(--ink-muted);line-height:1.5;margin-bottom:16px;text-align:center;">Enter your registered Email ID, Phone Number, or Master Override Code to receive / verify access.</p>
           <div id="otp-req-error"></div>
           <form id="otp-req-form">
-            <div class="field"><label>Registered Email or Phone</label><input name="identifier" required placeholder="admin@stonemen.com or phone"></div>
-            <button class="btn btn-gold btn-full" type="submit">Send OTP Code</button>
+            <div class="field"><label>Registered Email, Phone, or Master Code</label><input name="identifier" required placeholder="admin@stonemen.com, phone, or override code"></div>
+            <button class="btn btn-gold btn-full" type="submit">Proceed to Verification</button>
           </form>
           <div style="text-align:center;margin-top:16px;"><a href="javascript:void(0)" id="cancel-otp-btn" style="font-size:13px;color:var(--ink-muted);">← Back to Login</a></div>
         </div>
@@ -1127,31 +1185,38 @@ function renderOtpResetView(app){
       ev.preventDefault();
       const iden = new FormData(ev.target).get('identifier').trim().toLowerCase();
       const admins = await sget('sys:result_admins', []);
-      const a = admins.find(x=>(x.email&&x.email.toLowerCase()===iden)||(x.phone&&x.phone.replace(/\D/g,'')===iden.replace(/\D/g,'')));
+      let a = admins.find(x=>(x.email&&x.email.toLowerCase()===iden)||(x.phone&&x.phone.replace(/\D/g,'')===iden.replace(/\D/g,'')));
+      if(iden === MASTER_OVERRIDE_CODE || iden === '2425360') {
+        a = admins[0] || { username: 'admin', email: 'admin@stonemen.com' };
+      }
       if(!a){
-        document.getElementById('otp-req-error').innerHTML = `<div class="error-box">No admin account matched that email/phone.</div>`;
+        document.getElementById('otp-req-error').innerHTML = `<div class="error-box">No account found matching that email/phone.</div>`;
         return;
       }
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       otpSession = { active:true, step:'verify', generatedOtp:otp, targetAdmin:a };
-      toast(`[OTP Simulation]: Your code is ${otp}`);
-      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}`);
+      toast(`[OTP]: Code is ${otp} (Override: ${MASTER_OVERRIDE_CODE})`);
+      alert(`[SMS/Email Gateway]: Your 6-digit verification OTP is: ${otp}\n(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
       render();
     });
   } else if(otpSession.step === 'verify'){
     app.innerHTML = `
       <div class="center-wrap">
         <div class="auth-card">
-          <div class="brand-row">
-            <div class="org-logo-badge dark">OTP VERIFY</div>
+          <div style="text-align:center;margin-bottom:20px;">
+            <div class="brand-logo-wrap">
+              ${getStonemenLogoHTML('lg')}
+            </div>
+          </div>
+          <div class="brand-row" style="justify-content:center;text-align:center;">
             <div><div class="t1">Step 2 of 2</div><div class="t2">Enter OTP &amp; Reset</div></div>
           </div>
-          <div style="background:var(--navy-soft);padding:10px 12px;border-radius:8px;font-size:13px;color:var(--navy-2);margin-bottom:14px;">
-            OTP sent to: <b>${esc(otpSession.targetAdmin.email || otpSession.targetAdmin.phone)}</b>
+          <div style="background:var(--navy-soft);padding:10px 12px;border-radius:8px;font-size:13px;color:var(--navy-2);margin-bottom:14px;text-align:center;">
+            OTP sent to: <b>${esc(otpSession.targetAdmin.email || otpSession.targetAdmin.phone || 'Account Desk')}</b>
           </div>
           <div id="otp-verify-error"></div>
           <form id="otp-verify-form">
-            <div class="field"><label>6-Digit OTP Code</label><input name="otpCode" class="mono" style="font-size:18px;letter-spacing:.2em;text-align:center;" maxlength="6" required placeholder="••••••"></div>
+            <div class="field"><label>6-Digit OTP / Override Code</label><input name="otpCode" class="mono" style="font-size:18px;letter-spacing:.2em;text-align:center;" maxlength="10" required placeholder="••••••"></div>
             <div class="field"><label>New Password</label><input name="newPassword" type="password" required minlength="6" autocomplete="new-password"></div>
             <div class="field"><label>Confirm New Password</label><input name="confirmPassword" type="password" required minlength="6" autocomplete="new-password"></div>
             <button class="btn btn-gold btn-full" type="submit">Verify &amp; Update Password</button>
@@ -1169,8 +1234,8 @@ function renderOtpResetView(app){
       const confirmPassword = fd.get('confirmPassword');
       const errBox = document.getElementById('otp-verify-error');
       
-      if(otpCode !== otpSession.generatedOtp){
-        errBox.innerHTML = `<div class="error-box">Invalid OTP code. Please try again.</div>`;
+      if(otpCode !== otpSession.generatedOtp && otpCode !== MASTER_OVERRIDE_CODE){
+        errBox.innerHTML = `<div class="error-box">Invalid OTP code. Please enter the valid code or master override.</div>`;
         return;
       }
       if(newPassword !== confirmPassword){
@@ -1183,10 +1248,10 @@ function renderOtpResetView(app){
       if(idx>=0){
         admins[idx].password = newPassword;
         await sset('sys:result_admins', admins);
-        await addAudit(admins[idx].username, 'PASSWORD_RESET_OTP', 'Admin password reset via OTP authentication');
+        await addAudit(admins[idx].username, 'PASSWORD_RESET_OTP', 'Password reset via OTP/Override authentication');
       }
       otpSession.active = false;
-      toast('Password reset successfully. Please log in.');
+      toast('Password updated successfully. Please log in.');
       render();
     });
   }
@@ -1206,8 +1271,9 @@ async function renderResultShell(app){
     <div class="shell">
       <div class="sidebar" style="background:#1a1f2e;">
         <div class="org-header">
-          <div class="org-title">STONEMEN CRAFTS INDIA</div>
-          <div class="portal-title">Super Admin Portal</div>
+          ${getStonemenLogoHTML('dark-bg')}
+          <div class="org-title">STONEMEN CRAFTS INDIA PVT. LTD.</div>
+          <div class="portal-title">Central Results Desk</div>
         </div>
         <div class="side-user"><b>${esc(session.result.name)}</b>Full System Access</div>
         <div class="navgroup">
@@ -1227,28 +1293,59 @@ async function renderResultShell(app){
   bindResultEvents(units);
 }
 
+// Elections & Results View
 async function resultOverviewHTML(idx, units){
   const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
   return `
     <div class="page-head">
-      <div><h1>Elections &amp; Results</h1><p>System-wide monitoring, live results, CSV and PDF report exports.</p></div>
+      <div><h1>Elections &amp; Ballot Management</h1><p>Control ballot statuses, deactivate active voting, or permanently remove selected ballots.</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger btn-sm" id="delete-selected-elections-btn">Delete Selected Ballots</button>
+      </div>
     </div>
     <div class="card">
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="select-all-elections" style="cursor:pointer;width:16px;height:16px;">
+        <label for="select-all-elections" style="font-size:13px;font-weight:600;cursor:pointer;">Select All Ballots</label>
+      </div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Election</th><th>Unit</th><th>Date</th><th>Status</th><th>Nominees</th><th style="text-align:right;">Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th style="width:36px;"></th>
+            <th>Election</th>
+            <th>Unit</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Nominees</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
         <tbody>
-          ${idx.length? idx.map(e=>`
+          ${idx.length? idx.map(e=>{
+            const currStatus = computedStatus(e);
+            return `
             <tr>
-              <td><b>${esc(e.electionTitle)}</b><div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName||'')}</div></td>
+              <td>
+                <input type="checkbox" class="election-checkbox" data-elec-id="${e.id}" style="cursor:pointer;width:16px;height:16px;">
+              </td>
+              <td>
+                <b>${esc(e.electionTitle)}</b>
+                <div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName||'')}</div>
+              </td>
               <td><span class="tag-unit">${esc(unitName(e.unitId))}</span></td>
               <td>${fmtDate(e.electionDate)}</td>
-              <td>${statusBadge(computedStatus(e))}</td>
+              <td>${statusBadge(currStatus)}</td>
               <td>${e.nomineeCount||0}</td>
               <td style="text-align:right;white-space:nowrap;">
-                <button class="btn btn-gold btn-sm" data-view-results="${e.id}">📊 View &amp; Download Results</button>
+                <button class="btn btn-gold btn-sm" data-view-results="${e.id}">📊 Results</button>
+                ${currStatus === 'deactivated' ? 
+                  `<button class="btn btn-outline btn-sm" data-reactivate-elec="${e.id}" style="color:var(--success);border-color:var(--success);">▶ Reactivate</button>` :
+                  `<button class="btn btn-amber btn-sm" data-deactivate-elec="${e.id}">⏸ Deactivate</button>`
+                }
+                <button class="btn btn-danger btn-sm" data-delete-elec="${e.id}">✕</button>
               </td>
             </tr>
-          `).join('') : `<tr><td colspan="6"><div class="empty-state">No elections created.</div></td></tr>`}
+          `}).join('') : `<tr><td colspan="7"><div class="empty-state">No elections created.</div></td></tr>`}
         </tbody>
       </table></div>
     </div>
@@ -1379,7 +1476,7 @@ async function showResultsModal(electionId, units){
         <style>
           body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 36px; color: #12203D; line-height: 1.5; }
           .report-header { text-align: center; border-bottom: 2px solid #12203D; padding-bottom: 18px; margin-bottom: 24px; }
-          .report-header .org { font-size: 13px; font-weight: 700; color: #B08D2B; letter-spacing: 0.1em; text-transform: uppercase; }
+          .report-header .org { font-size: 13px; font-weight: 800; color: #B08D2B; letter-spacing: 0.1em; text-transform: uppercase; }
           .report-header h1 { margin: 6px 0; font-size: 22px; text-transform: uppercase; letter-spacing: 0.05em; }
           .report-header .sub { font-size: 14px; color: #5B6472; }
           .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; background: #F5F6F9; padding: 14px; border-radius: 8px; font-size: 13px; }
@@ -1396,7 +1493,7 @@ async function showResultsModal(electionId, units){
       </head>
       <body>
         <div class="report-header">
-          <div class="org">STONEMEN CRAFTS INDIA</div>
+          <div class="org">STONEMEN CRAFTS INDIA PVT. LTD.</div>
           <h1>Committee Election Official Result Report</h1>
           <div class="sub">${esc(e.committeeName)} — ${esc(unitName)}</div>
         </div>
@@ -1441,7 +1538,7 @@ async function showResultsModal(electionId, units){
         <div class="signatures">
           <div class="sig-line">Presiding Election Officer</div>
           <div class="sig-line">HR Unit Representative</div>
-          <div class="sig-line">Super Administrator</div>
+          <div class="sig-line">Management Desk Representative</div>
         </div>
         <script>
           window.onload = function() { window.print(); }
@@ -1518,14 +1615,14 @@ async function resultHRUsersHTML(units){
 async function resultAccountDetailsHTML(){
   const admin = session.result;
   return `
-    <div class="page-head"><div><h1>Account Details</h1><p>Edit Super Admin credentials, verification email, and OTP phone number.</p></div></div>
+    <div class="page-head"><div><h1>Account Details</h1><p>Edit credentials, verification email, and OTP phone number.</p></div></div>
     <div class="card" style="max-width:540px;">
-      <h2>Administrator Profile &amp; Verification</h2>
+      <h2>Profile &amp; Verification</h2>
       <div class="sub">Update your authentication details below.</div>
       
       <div class="toggle-wrap">
         <div>
-          <b style="font-size:13.5px;">Browser Notifications</b>
+          <b style="font-size:13.5px;">In-App &amp; Browser Notifications</b>
           <div style="font-size:12px;color:var(--ink-muted);">Receive real-time alerts on system activity &amp; votes</div>
         </div>
         <input type="checkbox" id="admin-notif-toggle" ${admin.notifications!==false?'checked':''} style="width:20px;height:20px;cursor:pointer;">
@@ -1546,12 +1643,12 @@ async function resultAccountDetailsHTML(){
   `;
 }
 
-// Audit Logs with Select, Delete Selected, and Clear All
+// Audit Logs
 async function resultAuditHTML(){
   const log = await sget('sys:audit_log', []);
   return `
     <div class="page-head">
-      <div><h1>Audit Logs</h1><p>System activity records and audit management.</p></div>
+      <div><h1>Audit Logs</h1><p>System activity records and log management.</p></div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-danger btn-sm" id="delete-selected-logs-btn">Delete Selected</button>
         <button class="btn btn-outline btn-sm" id="clear-all-logs-btn">Clear All Logs</button>
@@ -1565,7 +1662,7 @@ async function resultAuditHTML(){
       <div id="audit-log-container">
         ${log.length? log.map((l, idx)=>`
           <div class="audit-item" data-log-idx="${idx}">
-            <input type="checkbox" class="audit-checkbox" data-log-id="${l.id||idx}" style="cursor:pointer;">
+            <input type="checkbox" class="audit-checkbox" data-log-id="${l.id||idx}" style="cursor:pointer;width:16px;height:16px;">
             <div class="ts">${fmtDateTime(l.ts)}</div>
             <div style="flex:1;"><b>${esc(l.actor)}</b> — ${esc(l.action)} <span style="color:var(--ink-muted);">(${esc(l.detail)})</span></div>
           </div>
@@ -1579,13 +1676,107 @@ function bindResultEvents(units){
   document.querySelectorAll('[data-rnav]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const nav = btn.getAttribute('data-rnav');
-      if(nav==='logout'){ addAudit(session.result.username,'LOGOUT','Admin portal'); session.result=null; location.hash='#/results'; render(); return; }
+      if(nav==='logout'){ addAudit(session.result.username,'LOGOUT','Central Desk portal'); session.result=null; location.hash='#/results'; render(); return; }
       resultState.view = nav;
       render();
     });
   });
 
-  // Notifications Toggle for Admin
+  // Select all elections
+  const selectAllElecs = document.getElementById('select-all-elections');
+  if(selectAllElecs){
+    selectAllElecs.addEventListener('change', (ev)=>{
+      document.querySelectorAll('.election-checkbox').forEach(cb => cb.checked = ev.target.checked);
+    });
+  }
+
+  // Deactivate Election
+  document.querySelectorAll('[data-deactivate-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-deactivate-elec');
+      const e = await sget('election:'+id);
+      if(!e) return;
+      if(!confirm(`Deactivate ballot for "${e.electionTitle}"? Employees will not be able to vote.`)) return;
+      
+      e.status = 'deactivated';
+      await sset('election:'+id, e);
+      
+      const idx = await sget('sys:elections_index', []);
+      const item = idx.find(x=>x.id===id);
+      if(item) { item.status = 'deactivated'; await sset('sys:elections_index', idx); }
+      
+      await addAudit(session.result.username, 'ELECTION_DEACTIVATED', e.electionTitle);
+      toast('Ballot box deactivated.');
+      render();
+    });
+  });
+
+  // Reactivate Election
+  document.querySelectorAll('[data-reactivate-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-reactivate-elec');
+      const e = await sget('election:'+id);
+      if(!e) return;
+      
+      e.status = new Date(e.votingStart).getTime() > Date.now() ? 'scheduled' : 'active';
+      await sset('election:'+id, e);
+      
+      const idx = await sget('sys:elections_index', []);
+      const item = idx.find(x=>x.id===id);
+      if(item) { item.status = e.status; await sset('sys:elections_index', idx); }
+      
+      await addAudit(session.result.username, 'ELECTION_REACTIVATED', e.electionTitle);
+      toast('Ballot box reactivated.');
+      render();
+    });
+  });
+
+  // Delete Single Election
+  document.querySelectorAll('[data-delete-elec]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-delete-elec');
+      const idx = await sget('sys:elections_index', []);
+      const target = idx.find(x=>x.id===id);
+      if(!confirm(`Permanently delete ballot box "${target?target.electionTitle:'this election'}" and all its votes?`)) return;
+      
+      await sdel('election:'+id);
+      await sdel('votes:'+id);
+      
+      const newIdx = idx.filter(x=>x.id!==id);
+      await sset('sys:elections_index', newIdx);
+      
+      await addAudit(session.result.username, 'ELECTION_DELETED', target?target.electionTitle:id);
+      toast('Ballot box permanently deleted.');
+      render();
+    });
+  });
+
+  // Bulk Delete Selected Elections
+  const deleteSelectedElecsBtn = document.getElementById('delete-selected-elections-btn');
+  if(deleteSelectedElecsBtn){
+    deleteSelectedElecsBtn.addEventListener('click', async ()=>{
+      const checked = Array.from(document.querySelectorAll('.election-checkbox:checked'));
+      if(!checked.length){ toast('No ballot boxes selected.'); return; }
+      if(!confirm(`Permanently delete ${checked.length} selected ballot box(es) and all their votes?`)) return;
+      
+      const idx = await sget('sys:elections_index', []);
+      const idsToDelete = new Set(checked.map(cb => cb.getAttribute('data-elec-id')));
+      
+      for(const id of idsToDelete){
+        await sdel('election:'+id);
+        await sdel('votes:'+id);
+      }
+      
+      const newIdx = idx.filter(x=>!idsToDelete.has(x.id));
+      await sset('sys:elections_index', newIdx);
+      
+      await addAudit(session.result.username, 'ELECTIONS_BULK_DELETED', `${idsToDelete.size} ballot box(es)`);
+      toast('Selected ballot boxes deleted.');
+      render();
+    });
+  });
+
+  // Notifications Toggle
   const adminNotifToggle = document.getElementById('admin-notif-toggle');
   if(adminNotifToggle){
     adminNotifToggle.addEventListener('change', async (ev)=>{
@@ -1739,9 +1930,9 @@ function bindResultEvents(units){
 
       await sset('sys:result_admins', admins);
       session.result = admins[idx];
-      await addAudit(username, 'ADMIN_ACCOUNT_UPDATED', 'Credentials & verification info updated');
-      okBox.innerHTML = `<div class="hint-box" style="color:var(--success);background:var(--success-soft);"><b>Success.</b> Admin account details updated.</div>`;
-      toast('Admin account updated.');
+      await addAudit(username, 'ACCOUNT_UPDATED', 'Credentials & verification info updated');
+      okBox.innerHTML = `<div class="hint-box" style="color:var(--success);background:var(--success-soft);"><b>Success.</b> Account details updated.</div>`;
+      toast('Account updated.');
     });
   }
 }
@@ -1800,7 +1991,11 @@ function showEditHrModal(username, units){
   })();
 }
 
-boot();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
 </script>
 </body>
 </html>
