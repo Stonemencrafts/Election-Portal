@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Committee Election Portal — Stonemen Crafts India</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#12203D;
+    --navy-2:#1D3159;
+    --navy-soft:#EEF1F7;
+    --gold:#B08D2B;
+    --gold-soft:#F3E9CC;
+    --ink:#1B1F27;
+    --ink-muted:#5B6472;
+    --line:#E1E4EA;
+    --bg:#F5F6F9;
+    --surface:#FFFFFF;
+    --success:#1F7A4D;
+    --success-soft:#E4F3EA;
+    --danger:#B3261E;
+    --danger-soft:#FBE8E6;
+    --amber:#8A5A00;
+    --amber-soft:#FBF0DD;
+    --radius:12px;
+    --shadow:0 1px 2px rgba(18,32,61,.06), 0 8px 24px -12px rgba(18,32,61,.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces',serif;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  ::selection{background:var(--gold-soft);}
+
+  #app{min-height:100vh;}
+  .center-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:
+    radial-gradient(1200px 500px at 10% -10%, #1a2c53 0%, transparent 60%),
+    var(--navy);}
+  .auth-card{
+    width:100%;max-width:440px;background:var(--surface);border-radius:16px;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,.5);padding:36px 32px;
+  }
+  .org-logo-badge{
+    display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;border-radius:8px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .org-logo-badge.dark{
+    background:var(--navy-soft);border-color:var(--line);color:var(--navy);
+  }
+  .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  .brand-row .t1{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);font-weight:700;}
+  .brand-row .t2{font-size:17px;font-weight:700;color:var(--navy);}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--ink-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;
+    font-size:14.5px;font-family:inherit;background:#fcfcfd;color:var(--ink);
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--navy-2);background:#fff;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 18px;border-radius:9px;border:1.5px solid transparent;
+    font-weight:600;font-size:14px;transition:.15s;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-gold{background:var(--gold);color:#fff;}
+  .btn-gold:hover{background:#9a7a25;}
+  .btn-outline{background:#fff;border-color:var(--line);color:var(--ink);}
+  .btn-outline:hover{border-color:var(--navy-2);}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-danger:hover{background:#8f1e18;}
+  .btn-full{width:100%;}
+  .btn-sm{padding:7px 12px;font-size:13px;border-radius:7px;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .error-box{background:var(--danger-soft);color:var(--danger);border:1px solid #f2c9c5;padding:10px 12px;border-radius:8px;font-size:13.5px;margin-bottom:14px;}
+  .hint-box{background:var(--navy-soft);border:1px solid #dbe1ee;padding:10px 12px;border-radius:8px;font-size:12.5px;color:var(--ink-muted);margin-top:14px;line-height:1.5;}
+  .hint-box b{color:var(--ink);}
+
+  .landing{max-width:980px;margin:0 auto;padding:50px 24px 80px;}
+  .landing-top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;}
+  .landing-hero{text-align:center;margin-bottom:40px;}
+  .landing-hero h1{font-size:36px;margin:0 0 8px;color:var(--navy);}
+  .landing-hero .org-subtitle{color:var(--gold);font-size:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;}
+  .portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:40px;}
+  .portal-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow);}
+  .portal-card .icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:20px;}
+  .portal-card h3{font-size:18px;margin:0 0 6px;}
+  .portal-card p{font-size:13.5px;color:var(--ink-muted);margin:0 0 18px;line-height:1.5;}
+  .elec-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+  .elec-list-h{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);}
+  .elec-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap;}
+  .elec-row:last-child{border-bottom:none;}
+  .elec-row .name{font-weight:600;font-size:14.5px;}
+  .elec-row .meta{font-size:12.5px;color:var(--ink-muted);}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+  .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .badge-draft{background:#EDEEF2;color:#5B6472;}
+  .badge-scheduled{background:var(--amber-soft);color:var(--amber);}
+  .badge-active{background:var(--success-soft);color:var(--success);}
+  .badge-closed{background:#E7EAF2;color:var(--navy-2);}
+  .badge-deactivated{background:var(--danger-soft);color:var(--danger);}
+  .badge-archived{background:#EFEFEF;color:#767676;}
+
+  .shell{display:flex;min-height:100vh;}
+  .sidebar{width:260px;flex-shrink:0;background:var(--navy);color:#dfe4f0;padding:20px 14px;display:flex;flex-direction:column;}
+  .sidebar .org-header{padding:6px 6px 16px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px;}
+  .sidebar .org-header .org-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#d9b95c;font-weight:700;}
+  .sidebar .org-header .portal-title{font-size:15px;color:#fff;font-weight:700;margin-top:2px;}
+  .side-user{font-size:12.5px;color:#9aa6c4;padding:0 6px 14px;line-height:1.5;}
+  .side-user b{color:#fff;display:block;font-size:13.5px;}
+  .navgroup{margin-bottom:6px;}
+  .navgroup-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:#7583a6;padding:14px 10px 6px;font-weight:700;}
+  .navlink{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;color:#c9d1e6;font-weight:500;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;}
+  .navlink:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .navlink.active{background:rgba(255,255,255,.12);color:#fff;}
+  .navlink .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;}
+  .sidebar-footer{margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.12);}
+  .main{flex:1;min-width:0;padding:28px 34px 60px;}
+  .page-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:22px;}
+  .page-head h1{font-size:23px;margin:0 0 4px;color:var(--navy);}
+  .page-head p{color:var(--ink-muted);font-size:13.5px;margin:0;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px;}
+  .card h2{font-size:16px;margin:0 0 4px;}
+  .card .sub{font-size:12.5px;color:var(--ink-muted);margin-bottom:16px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}.shell{flex-direction:column;}.sidebar{width:100%;}}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;}
+  .stat-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);}
+  .stat-box .n{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--navy);}
+  .stat-box .l{font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;padding:10px 12px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted);border-bottom:1.5px solid var(--line);}
+  td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .table-wrap{overflow-x:auto;}
+  .tag-unit{background:var(--navy-soft);color:var(--navy-2);font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:6px;}
+
+  .nom-editor-row{display:grid;grid-template-columns:64px 1fr 1fr 1fr 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:#fbfbfc;}
+  .nom-photo-mini{width:52px;height:52px;border-radius:8px;object-fit:cover;background:var(--navy-soft);}
+  .nom-photo-mini.empty{display:flex;align-items:center;justify-content:center;color:var(--ink-muted);font-size:10px;text-align:center;}
+  @media(max-width:900px){.nom-editor-row{grid-template-columns:1fr 1fr;}}
+
+  .vote-wrap{max-width:760px;margin:0 auto;padding:0 0 60px;}
+  .vote-header{background:linear-gradient(160deg,var(--navy) 0%, #1a2c53 100%);color:#fff;padding:34px 26px 30px;position:relative;overflow:hidden;}
+  .vote-header .company{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#d9b95c;font-weight:700;margin-bottom:8px;}
+  .vote-header h1{font-size:24px;margin:0 0 14px;color:#fff;line-height:1.3;}
+  .vote-meta-grid{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:16px;}
+  .vote-meta-grid .item .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#93a0c2;margin-bottom:3px;}
+  .vote-meta-grid .item .v{font-size:14px;font-weight:600;color:#fff;}
+  .vote-instructions{background:rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;color:#e7ebf5;}
+  .vote-body{padding:26px;}
+  .nominee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-bottom:26px;}
+  .nominee-card{
+    background:var(--surface);border:2px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;
+    transition:.15s;box-shadow:var(--shadow);
+  }
+  .nominee-card:hover{border-color:#c8cede;transform:translateY(-2px);}
+  .nominee-card.selected{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft), var(--shadow);}
+  .nominee-photo{width:100%;aspect-ratio:1/1;background:var(--navy-soft);display:flex;align-items:center;justify-content:center;color:var(--ink-muted);font-size:12px;overflow:hidden;}
+  .nominee-photo img{width:100%;height:100%;object-fit:cover;}
+  .nominee-info{padding:13px 14px 14px;}
+  .nominee-info .n{font-weight:700;font-size:15px;margin-bottom:6px;}
+  .nominee-info .row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-muted);margin-bottom:2px;}
+  .select-pill{margin-top:10px;display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink-muted);}
+  .select-pill .ring{width:16px;height:16px;border-radius:50%;border:2px solid #c7ccd8;flex-shrink:0;}
+  .nominee-card.selected .select-pill{color:var(--gold);}
+  .nominee-card.selected .select-pill .ring{border-color:var(--gold);background:var(--gold);box-shadow:inset 0 0 0 3px #fff;}
+  .sticky-submit{position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 70%, transparent);padding:18px 0 6px;}
+  .submit-bar{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 -6px 24px -14px rgba(0,0,0,.2), var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .submit-bar .sel-label{font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .submit-bar .sel-name{font-weight:700;font-size:15px;}
+
+  .status-screen{max-width:460px;margin:80px auto;text-align:center;padding:0 24px;}
+  .status-screen .icon-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 18px;}
+  .status-screen h2{font-size:20px;margin:0 0 8px;}
+  .status-screen p{color:var(--ink-muted);font-size:14.5px;line-height:1.6;}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(15,20,35,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal{background:#fff;border-radius:16px;max-width:680px;width:100%;padding:28px;box-shadow:0 30px 80px -20px rgba(0,0,0,.4);max-height:90vh;overflow-y:auto;}
+  .modal h3{font-size:18px;margin:0 0 10px;}
+  .modal p{font-size:14.5px;color:var(--ink-muted);line-height:1.6;margin:0 0 20px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:200;}
+  .empty-state{text-align:center;padding:44px 20px;color:var(--ink-muted);}
+  .empty-state .em-icon{font-size:30px;margin-bottom:10px;}
+
+  .audit-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:center;}
+  .audit-item:last-child{border-bottom:none;}
+  .audit-item .ts{color:var(--ink-muted);width:150px;flex-shrink:0;font-size:12px;}
+  .link-copy-box{display:flex;gap:8px;align-items:center;background:#fbfbfc;border:1.5px dashed var(--line);padding:10px 12px;border-radius:9px;}
+  .link-copy-box input{border:none;background:transparent;flex:1;font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--navy-2);}
+  
+  .progress-bar-bg{width:100%;height:8px;background:#EEF1F7;border-radius:99px;overflow:hidden;margin-top:4px;}
+  .progress-bar-fill{height:100%;background:var(--gold);border-radius:99px;}
+  .toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#fbfbfc;border:1px solid var(--line);border-radius:10px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   REAL-TIME CLOUD DATABASE CONFIGURATION (UNIVERSAL SYNC)
+   ========================================================================= */
+const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtdb.firebaseio.com";
+const memStore = {};
+
+async function fetchCloudData() {
+  try {
+    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json?t=${Date.now()}`);
+    return await res.json();
+  } catch(e) {
+    console.error("Cloud fetch error:", e);
+    return null;
+  }
+}
+
+async function sget(key, fallback = null) {
+  if (memStore[key] !== undefined && memStore[key] !== null) return memStore[key];
+  try {
+    const raw = localStorage.getItem('cems:' + key);
+    if (raw !== null) {
+      memStore[key] = JSON.parse(raw);
+      return memStore[key];
+    }
+  } catch(e) {}
+  return fallback;
+}
+
+async function sset(key, value) {
+  memStore[key] = value;
+  try { localStorage.setItem('cems:' + key, JSON.stringify(value)); } catch(e) {}
+  
+  try {
+    const safeKey = encodeURIComponent(key);
+    await fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value)
+    });
+  } catch(e) {
+    console.error("Cloud write error:", e);
+  }
+  return true;
+}
+
+async function syncAllFromCloud() {
+  const cloud = await fetchCloudData();
+  if (!cloud || typeof cloud !== 'object') return;
+  for (const k in cloud) {
+    const originalKey = decodeURIComponent(k);
+    memStore[originalKey] = cloud[k];
+    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e) {}
+  }
+}
+
+window.addEventListener('focus', async () => {
+  await syncAllFromCloud();
+  render();
+});
+
+function uid(prefix){ return prefix+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4); }
+function makeSlug(){ return Math.random().toString(36).slice(2,10); }
+function fmtDate(d){ if(!d) return '—'; return new Date(d).toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtDateTime(d){ if(!d) return '—'; return new Date(d).toLocaleString(undefined,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+function esc(s){ return (s===undefined||s===null)?'':String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function toast(msg){
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2600);
+}
+
+async function triggerNotification(title, bodyText){
+  if("Notification" in window && Notification.permission === "granted"){
+    try { new Notification(title, { body: bodyText, icon: "favicon.ico" }); } catch(e){}
+  }
+}
+
+async function addAudit(actor, action, detail){
+  const log = await sget('sys:audit_log', []);
+  log.unshift({id: uid('log'), ts:new Date().toISOString(), actor, action, detail: detail||''});
+  await sset('sys:audit_log', log.slice(0,500));
+}
+
+let session = { hr:null, result:null };
+
+function computedStatus(e){
+  if(e.status==='draft'||e.status==='deactivated'||e.status==='archived') return e.status;
+  const now = Date.now();
+  const start = new Date(e.votingStart).getTime();
+  const end = new Date(e.votingEnd).getTime();
+  if(isNaN(start) || isNaN(end)) return e.status || 'draft';
+  if(now < start) return 'scheduled';
+  if(now >= start && now <= end) return 'active';
+  return 'closed';
+}
+const STATUS_LABEL = {draft:'Draft', scheduled:'Scheduled', active:'Active', closed:'Closed', deactivated:'Deactivated', archived:'Archived'};
+function statusBadge(status){
+  return `<span class="badge badge-${status}">${STATUS_LABEL[status]||status}</span>`;
+}
+
+window.addEventListener('hashchange', render);
+
+async function boot(){
+  await syncAllFromCloud();
+  
+  let units = await sget('sys:units');
+  if(!units){
+    units = [
+      {id:'u1',name:'A-24 & A-25'},
+      {id:'u2',name:'Amroha'},
+      {id:'u3',name:'Mangura'},
+      {id:'u4',name:'Unit 4'}
+    ];
+    await sset('sys:units', units);
+  }
+  let hrUsers = await sget('sys:hr_users');
+  if(!hrUsers){
+    hrUsers = [
+      {username:'hr_a24', password:'a24pass', name:'HR — A-24 & A-25', unitIds:['u1'], notifications:true},
+      {username:'hr_amroha', password:'amrohapass', name:'HR — Amroha', unitIds:['u2'], notifications:true},
+      {username:'hr_mangura', password:'mangurapass', name:'HR — Mangura', unitIds:['u3'], notifications:true},
+      {username:'hr_unit4', password:'unit4pass', name:'HR — Unit 4', unitIds:['u4'], notifications:true}
+    ];
+    await sset('sys:hr_users', hrUsers);
+  }
+  let resAdmins = await sget('sys:result_admins');
+  if(!resAdmins){
+    resAdmins = [{
+      username:'superadmin',
+      password:'ResultAdmin@2026',
+      name:'Super Admin',
+      email:'admin@stonemen.com',
+      phone:'+91 98765 43210',
+      notifications:true
+    }];
+    await sset('sys:result_admins', resAdmins);
+  }
+  let idx = await sget('sys:elections_index');
+  if(!idx) await sset('sys:elections_index', []);
+  let log = await sget('sys:audit_log');
+  if(!log) await sset('sys:audit_log', []);
+
+  await render();
+}
+
+function currentRoute(){ return location.hash.replace(/^#/,'') || '/'; }
+
+async function render(){
+  const route = currentRoute();
+  const app = document.getElementById('app');
+  window.scrollTo(0,0);
+  if(route.startsWith('/vote/')){ await renderVoting(app, decodeURIComponent(route.slice(6))); return; }
+  if(route === '/admin'){ await renderAdmin(app); return; }
+  if(route === '/results'){ await renderResults(app); return; }
+  await renderLanding(app);
+}
+
+// ---------------------------------------------------------------- LANDING (UPDATED)
+async function renderLanding(app){
+  const idx = await sget('sys:elections_index', []);
+  const units = await sget('sys:units', []);
+  const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
+  const visible = idx.filter(e => ['scheduled','active','closed'].includes(computedStatus(e)));
+
+  app.innerHTML = `
+    <div class="landing">
+      <div class="landing-top-bar">
+        <div class="org-logo-badge dark">STONEMEN CRAFTS INDIA</div>
+        <div style="font-size:12.5px;color:var(--ink-muted);font-weight:600;">ELECTION MANAGEMENT PORTAL</div>
+      </div>
+
+      <div class="landing-hero">
+        <div class="org-subtitle">STONEMEN CRAFTS INDIA</div>
+        <h1>Committee Election Portal</h1>
+      </div>
+
+      <div class="portal-grid">
+        <div class="portal-card">
+          <div class="icon" style="background:var(--navy-soft);color:var(--navy-2);">🧑‍💼</div>
+          <h3>HR / User Portal</h3>
+          <p>Create and manage unit-level elections, add candidate profiles, generate voting links, and view voter receipts.</p>
+          <a href="#/admin"><button class="btn btn-primary btn-full">Open User Portal →</button></a>
+        </div>
+        <div class="portal-card">
+          <div class="icon" style="background:var(--gold-soft);color:var(--amber);">🔐</div>
+          <h3>Admin Portal</h3>
+          <p>Access live results, export Excel/PDF official reports, manage facility units, HR accounts, and audit log history.</p>
+          <a href="#/results"><button class="btn btn-gold btn-full">Open Admin Portal →</button></a>
+        </div>
+      </div>
+
+      <div class="elec-list">
+        <div class="elec-list-h">Published &amp; Active Elections</div>
+        ${visible.length ? visible.map(e => `
+          <div class="elec-row">
+            <div>
+              <div class="name">${esc(e.electionTitle)}</div>
+              <div class="meta">${esc(unitName(e.unitId))} · ${fmtDate(e.electionDate)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              ${statusBadge(computedStatus(e))}
+              <a href="#/vote/${e.slug}"><button class="btn btn-outline btn-sm">Open Ballot →</button></a>
+            </div>
+          </div>
+        `).join('') : `<div class="empty-state"><div class="em-icon">📋</div>No active committee elections currently listed.</div>`}
+      </div>
+    </div>
+  `;
+}
+
+// ---------------------------------------------------------------- USER (HR) PORTAL
+let adminState = { view:'dashboard', electionId:null, tab:'details', draft:null, error:null, filter:'all' };
+
+async function renderAdmin(app){
+  if(!session.hr){ renderAdminLogin(app); return; }
+  await renderAdminShell(app);
+}
+
+function renderAdminLogin(app){
+  app.innerHTML = `
+    <div class="center-wrap">
+      <div class="auth-card">
+        <div class="brand-row">
+          <div class="org-logo-badge dark">STONEMEN</div>
+          <div>
+            <div class="t1">User Portal</div>
+            <div class="t2">HR / Unit Manager</div>
+          </div>
+        </div>
+        <div id="admin-login-error"></div>
+        <form id="admin-login-form">
+          <div class="field"><label>Username</label><input name="username" autocomplete="username" required></div>
+          <div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn-primary btn-full" type="submit">Log In</button>
+        </form>
+        <div style="text-align:center;margin-top:16px;"><a href="#/" style="font-size:13px;color:var(--ink-muted);">← Back to portal selection</a></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('admin-login-form').addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    const username = fd.get('username').trim();
+    const password = fd.get('password');
+    const users = await sget('sys:hr_users', []);
+    const u = users.find(x=>x.username===username && x.password===password);
+    const errBox = document.getElementById('admin-login-error');
+    if(!u){
+      await addAudit(username||'(unknown)', 'LOGIN_FAILED', 'User portal');
+      errBox.innerHTML = `<div class="error-box">Invalid username or password.</div>`;
+      return;
+    }
+    session.hr = u;
+    adminState = { view:'dashboard', electionId:null, tab:'details', draft:null, error:null, filter:'all' };
+    await addAudit(u.username, 'LOGIN_SUCCESS', 'User portal');
+    location.hash = '#/admin';
+    render();
+  });
+}
+
+async function renderAdminShell(app){
+  const units = await sget('sys:units', []);
+  const myUnits = units.filter(u => session.hr.unitIds && session.hr.unitIds.includes(u.id));
+  const idx = await sget('sys:elections_index', []);
+  const myElections = idx.filter(e => session.hr.unitIds && session.hr.unitIds.includes(e.unitId));
+
+  let body = '';
+  if(adminState.view === 'dashboard') body = adminDashboardHTML(myElections, units);
+  else if(adminState.view === 'elections') body = adminElectionsListHTML(myElections, units, adminState.filter||'all');
+  else if(adminState.view === 'editor') body = await adminEditorHTML(units);
+  else if(adminState.view === 'profile') body = adminProfileHTML();
+
+  app.innerHTML = `
+    <div class="shell">
+      <div class="sidebar">
+        <div class="org-header">
+          <div class="org-title">STONEMEN CRAFTS INDIA</div>
+          <div class="portal-title">HR User Portal</div>
+        </div>
+        <div class="side-user"><b>${esc(session.hr.name)}</b>${myUnits.map(u=>u.name).join(', ') || 'No Assigned Units'}</div>
+        <div class="navgroup">
+          <button class="navlink ${adminState.view==='dashboard'?'active':''}" data-nav="dashboard"><span class="dot"></span>Dashboard</button>
+          <button class="navlink ${adminState.view==='elections'&&adminState.filter==='active'?'active':''}" data-nav="elections" data-filter="active"><span class="dot"></span>Active Elections</button>
+          <button class="navlink ${adminState.view==='elections'&&adminState.filter==='scheduled'?'active':''}" data-nav="elections" data-filter="scheduled"><span class="dot"></span>Scheduled Elections</button>
+          <button class="navlink ${adminState.view==='elections'&&adminState.filter==='draft'?'active':''}" data-nav="elections" data-filter="draft"><span class="dot"></span>Draft Elections</button>
+          <button class="navlink ${adminState.view==='elections'&&adminState.filter==='all'?'active':''}" data-nav="elections" data-filter="all"><span class="dot"></span>Election History</button>
+        </div>
+        <div class="navgroup">
+          <div class="navgroup-label">Manage</div>
+          <button class="navlink" data-nav="new"><span class="dot"></span>+ Create New Election</button>
+          <button class="navlink ${adminState.view==='profile'?'active':''}" data-nav="profile"><span class="dot"></span>Account Details</button>
+        </div>
+        <div class="sidebar-footer">
+          <button class="navlink" data-nav="logout"><span class="dot"></span>Log Out</button>
+        </div>
+      </div>
+      <div class="main">${body}</div>
+    </div>
+  `;
+  bindAdminShellEvents(units);
+}
+
+function adminDashboardHTML(myElections, units){
+  const counts = {active:0,scheduled:0,draft:0,closed:0};
+  myElections.forEach(e=>{ const s=computedStatus(e); if(counts[s]!==undefined) counts[s]++; });
+  return `
+    <div class="page-head">
+      <div><h1>Dashboard</h1><p>Overview of elections across your assigned unit(s).</p></div>
+      <button class="btn btn-primary" data-nav="new">+ Create New Election</button>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="n">${counts.active}</div><div class="l">Active</div></div>
+      <div class="stat-box"><div class="n">${counts.scheduled}</div><div class="l">Scheduled</div></div>
+      <div class="stat-box"><div class="n">${counts.draft}</div><div class="l">Draft</div></div>
+      <div class="stat-box"><div class="n">${myElections.length}</div><div class="l">Total</div></div>
+    </div>
+    <div class="card">
+      <h2>Recent elections</h2>
+      ${adminElectionsTable(myElections.slice(0,6), units)}
+    </div>
+  `;
+}
+
+function adminElectionsListHTML(myElections, units, filter){
+  const filtered = filter==='all' ? myElections : myElections.filter(e=>computedStatus(e)===filter);
+  const titleMap = {active:'Active Elections',scheduled:'Scheduled Elections',draft:'Draft Elections',all:'Election History'};
+  return `
+    <div class="page-head"><div><h1>${titleMap[filter]}</h1><p>Scoped to your assigned unit(s).</p></div>
+      <button class="btn btn-primary" data-nav="new">+ Create New Election</button>
+    </div>
+    <div class="card">${adminElectionsTable(filtered, units, true)}</div>
+  `;
+}
+
+function adminElectionsTable(list, units){
+  const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
+  if(!list.length) return `<div class="empty-state"><div class="em-icon">📋</div>No elections recorded in this category.</div>`;
+  return `
+    <div class="table-wrap"><table>
+      <thead><tr><th>Election</th><th>Unit</th><th>Date</th><th>Status</th><th>Nominees</th><th>Link</th><th></th></tr></thead>
+      <tbody>
+        ${list.map(e=>`
+          <tr>
+            <td><b>${esc(e.electionTitle)}</b><div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName)}</div></td>
+            <td><span class="tag-unit">${esc(unitName(e.unitId))}</span></td>
+            <td>${fmtDate(e.electionDate)}</td>
+            <td>${statusBadge(computedStatus(e))}</td>
+            <td>${e.nomineeCount||0}</td>
+            <td>${e.slug ? `<span class="mono" style="font-size:12px;">#/vote/${e.slug}</span>` : '—'}</td>
+            <td><button class="btn btn-outline btn-sm" data-open-election="${e.id}">Manage</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table></div>
+  `;
+}
+
+function adminProfileHTML(){
+  const u = session.hr;
+  return `
+    <div class="page-head"><div><h1>Account Details</h1><p>View your profile, toggle notifications, and update your password.</p></div></div>
+    <div class="card" style="max-width:480px;">
+      <h2>User Profile</h2>
+      <div class="field"><label>Username</label><input value="${esc(u.username)}" disabled style="background:#f0f2f5;cursor:not-allowed;"></div>
+      <div class="field"><label>Full Name</label><input value="${esc(u.name)}" disabled style="background:#f0f2f5;cursor:not-allowed;"></div>
+      
+      <div class="toggle-wrap">
+        <div>
+          <b style="font-size:13.5px;">Browser Notifications</b>
+          <div style="font-size:12px;color:var(--ink-muted);">Receive alerts on election updates</div>
+        </div>
+        <input type="checkbox" id="hr-notif-toggle" ${u.notifications!==false?'checked':''} style="width:20px;height:20px;cursor:pointer;">
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--line);margin:18px 0;">
+      <h2>Change Password</h2>
+      <div class="sub">You can change your password at any time.</div>
+      <div id="hr-pw-error"></div>
+      <div id="hr-pw-success"></div>
+      <form id="hr-pw-form">
+        <div class="field"><label>Current Password</label><input name="currentPassword" type="password" autocomplete="current-password" required></div>
+        <div class="field"><label>New Password</label><input name="newPassword" type="password" autocomplete="new-password" required minlength="6"></div>
+        <div class="field"><label>Confirm New Password</label><input name="confirmPassword" type="password" autocomplete="new-password" required minlength="6"></div>
+        <button class="btn btn-primary" type="submit">Update Password</button>
+      </form>
+    </div>
+  `;
+}
+
+async function adminEditorHTML(units){
+  const e = adminState.draft;
+  if(!e) return `<div class="empty-state">No election selected.</div>`;
+  const myUnits = units.filter(u=>session.hr.unitIds && session.hr.unitIds.includes(u.id));
+  const status = computedStatus(e);
+  const tabs = [['details','Election Info'],['nominees','Nominees'],['preview','Preview'],['link','Voting Link']];
+  return `
+    <div class="page-head">
+      <div>
+        <h1>${e.id ? esc(e.electionTitle||'Untitled Election') : 'New Election'} ${statusBadge(status)}</h1>
+        <p>${e.id ? 'Editing existing election' : 'Fill in details, add nominees, then activate.'}</p>
+      </div>
+      <button class="btn btn-outline" data-nav="elections" data-filter="all">← Back to list</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+      ${tabs.map(([k,l])=>`<button class="btn ${adminState.tab===k?'btn-primary':'btn-outline'} btn-sm" data-etab="${k}">${l}</button>`).join('')}
+    </div>
+    ${adminState.error ? `<div class="error-box">${esc(adminState.error)}</div>` : ''}
+    ${adminState.tab==='details' ? editorDetailsTab(e, myUnits) : ''}
+    ${adminState.tab==='nominees' ? editorNomineesTab(e) : ''}
+    ${adminState.tab==='preview' ? editorPreviewTab(e) : ''}
+    ${adminState.tab==='link' ? editorLinkTab(e, status) : ''}
+  `;
+}
+
+function editorDetailsTab(e, myUnits){
+  return `
+    <div class="card">
+      <h2>Election Information</h2>
+      <form id="details-form">
+        <div class="grid-2">
+          <div class="field"><label>Unit</label>
+            <select name="unitId" required>${myUnits.map(u=>`<option value="${u.id}" ${e.unitId===u.id?'selected':''}>${esc(u.name)}</option>`).join('')}</select>
+          </div>
+          <div class="field"><label>Committee Name</label><input name="committeeName" value="${esc(e.committeeName||'')}" placeholder="e.g. Health & Safety Committee" required></div>
+        </div>
+        <div class="field"><label>Election Title</label><input name="electionTitle" value="${esc(e.electionTitle||'')}" placeholder="e.g. Safety Committee Election 2026" required></div>
+        <div class="field"><label>Instructions to voters</label><textarea name="instructions" rows="2" placeholder="Please select one nominee and click Submit Vote.">${esc(e.instructions||'')}</textarea></div>
+        <div class="grid-3">
+          <div class="field"><label>Election Date</label><input name="electionDate" type="date" value="${e.electionDate?e.electionDate.slice(0,10):''}" required></div>
+          <div class="field"><label>Voting Start</label><input name="votingStart" type="datetime-local" value="${e.votingStart?e.votingStart.slice(0,16):''}" required></div>
+          <div class="field"><label>Voting End</label><input name="votingEnd" type="datetime-local" value="${e.votingEnd?e.votingEnd.slice(0,16):''}" required></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Voting Type</label>
+            <select name="votingType">
+              <option value="single" ${e.votingType==='single'?'selected':''}>Single choice</option>
+              <option value="multiple" ${e.votingType==='multiple'?'selected':''}>Multiple choice</option>
+            </select>
+          </div>
+          <div class="field"><label>Seats</label><input name="seats" type="number" min="1" value="${e.seats||1}"></div>
+          <div class="field"><label>Eligible Voters (Optional)</label><input name="eligibleVoters" type="number" min="0" value="${e.eligibleVoters||''}"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Save Details</button>
+      </form>
+    </div>
+  `;
+}
+
+function editorNomineesTab(e){
+  const noms = e.nominees||[];
+  return `
+    <div class="card">
+      <h2>Nominees</h2>
+      <div id="nominee-rows">
+        ${noms.map((n,i)=>nomineeRow(n,i,noms.length)).join('') || '<div class="empty-state" style="padding:20px;">No nominees added yet.</div>'}
+      </div>
+      <button class="btn btn-outline btn-sm" id="add-nominee-btn" style="margin-top:6px;">+ Add Nominee</button>
+      <div style="margin-top:18px;"><button class="btn btn-primary" id="save-nominees-btn">Save Nominees</button></div>
+    </div>
+  `;
+}
+function nomineeRow(n,i,total){
+  return `
+  <div class="nom-editor-row" data-nom-idx="${i}">
+    <div>
+      ${n.photo ? `<img class="nom-photo-mini" src="${n.photo}">` : `<div class="nom-photo-mini empty">No Photo</div>`}
+      <input type="file" accept="image/png,image/jpeg,image/webp" class="nom-photo-input" style="font-size:10px;margin-top:4px;width:64px;">
+    </div>
+    <div class="field" style="margin-bottom:0;"><label>Name</label><input class="nom-field" data-f="name" value="${esc(n.name||'')}"></div>
+    <div class="field" style="margin-bottom:0;"><label>Card No.</label><input class="nom-field" data-f="cardNo" value="${esc(n.cardNo||'')}"></div>
+    <div class="field" style="margin-bottom:0;"><label>Department</label><input class="nom-field" data-f="department" value="${esc(n.department||'')}"></div>
+    <div class="field" style="margin-bottom:0;"><label>Designation</label><input class="nom-field" data-f="designation" value="${esc(n.designation||'')}"></div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <button class="btn btn-outline btn-sm" data-move-up="${i}" ${i===0?'disabled':''}>↑</button>
+      <button class="btn btn-outline btn-sm" data-move-down="${i}" ${i===total-1?'disabled':''}>↓</button>
+      <button class="btn btn-danger btn-sm" data-remove-nom="${i}">✕</button>
+    </div>
+  </div>`;
+}
+
+function editorPreviewTab(e){
+  return `
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="hint-box" style="margin:16px 20px 0;">Preview Mode</div>
+      ${ballotMarkup(e, {preview:true})}
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn btn-outline" id="save-draft-btn">Save as Draft</button>
+      <button class="btn btn-gold" id="activate-btn">Activate Election</button>
+    </div>
+  `;
+}
+
+function editorLinkTab(e, status){
+  if(!e.slug) return `<div class="card"><div class="empty-state"><div class="em-icon">🔗</div>Activate election to generate voting link.</div></div>`;
+  const url = location.origin + location.pathname + '#/vote/' + e.slug;
+  return `
+    <div class="card">
+      <h2>Voting Link &amp; Kiosk Mode</h2>
+      <div class="link-copy-box"><input readonly value="${url}" id="voting-link-input"><button class="btn btn-outline btn-sm" id="copy-link-btn">Copy Link</button></div>
+      <div style="margin-top:14px;"><a href="#/vote/${e.slug}" target="_blank"><button class="btn btn-primary btn-sm">Open Voting Ballot ↗</button></a></div>
+    </div>
+  `;
+}
+
+function ballotMarkup(e, opts){
+  opts = opts || {};
+  const noms = (e.nominees||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  return `
+    <div class="vote-header">
+      <div class="company">STONEMEN CRAFTS INDIA</div>
+      <h1>${esc(e.electionTitle||'Untitled Election')}</h1>
+      <div class="vote-meta-grid">
+        <div class="item"><div class="l">Committee</div><div class="v">${esc(e.committeeName||'—')}</div></div>
+        <div class="item"><div class="l">Election Date</div><div class="v">${fmtDate(e.electionDate)}</div></div>
+      </div>
+      ${e.instructions ? `<div class="vote-instructions">${esc(e.instructions)}</div>` : ''}
+    </div>
+    <div class="vote-body">
+      <div class="nominee-grid">
+        ${noms.map(n=>`
+          <div class="nominee-card" data-nom-id="${n.id}">
+            <div class="nominee-photo">${n.photo?`<img src="${n.photo}">`:'No Photo'}</div>
+            <div class="nominee-info">
+              <div class="n">${esc(n.name||'Unnamed')}</div>
+              <div class="row"><span>Card No.</span><span>${esc(n.cardNo||'—')}</span></div>
+              <div class="row"><span>Department</span><span>${esc(n.department||'—')}</span></div>
+              <div class="row"><span>Designation</span><span>${esc(n.designation||'—')}</span></div>
+              <div class="select-pill"><span class="ring"></span><span>SELECT</span></div>
+            </div>
+          </div>
+        `).join('') || `<div class="empty-state">No nominees added.</div>`}
+      </div>
+      ${opts.preview ? '' : `
+      <div class="sticky-submit">
+        <div class="submit-bar">
+          <div><div class="sel-label">Selected Nominee</div><div class="sel-name" id="sel-name-display">None selected</div></div>
+          <button class="btn btn-gold" id="submit-vote-btn" disabled>Submit Vote</button>
+        </div>
+      </div>`}
+    </div>
+  `;
+}
+
+function bindAdminShellEvents(units){
+  document.querySelectorAll('[data-nav]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const nav = btn.getAttribute('data-nav');
+      if(nav==='logout'){ addAudit(session.hr.username,'LOGOUT','User portal'); session.hr=null; location.hash='#/admin'; render(); return; }
+      if(nav==='dashboard'){ adminState = {view:'dashboard',electionId:null,tab:'details',draft:null,error:null,filter:'all'}; render(); return; }
+      if(nav==='elections'){ adminState = {view:'elections',filter:btn.getAttribute('data-filter')||'all',electionId:null,tab:'details',draft:null,error:null}; render(); return; }
+      if(nav==='profile'){ adminState = {view:'profile',electionId:null,tab:'details',draft:null,error:null,filter:'all'}; render(); return; }
+      if(nav==='new'){
+        const myUnits = units.filter(u=>session.hr.unitIds && session.hr.unitIds.includes(u.id));
+        adminState = { view:'editor', tab:'details', error:null, filter:'all', draft:{
+          id:null, unitId:(myUnits[0]||{}).id, committeeName:'', electionTitle:'', instructions:'',
+          electionDate:'', votingStart:'', votingEnd:'', votingType:'single', seats:1, eligibleVoters:'',
+          nominees:[], status:'draft', slug:null, createdBy:session.hr.username
+        }};
+        render(); return;
+      }
+    });
+  });
+  document.querySelectorAll('[data-open-election]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.getAttribute('data-open-election');
+      const full = await sget('election:'+id);
+      adminState = { view:'editor', tab:'details', error:null, draft: full, filter:'all' };
+      render();
+    });
+  });
+  if(adminState.view==='editor') bindEditorEvents();
+  if(adminState.view==='profile') bindAdminProfileEvents();
+}
+
+function bindAdminProfileEvents(){
+  const notifToggle = document.getElementById('hr-notif-toggle');
+  if(notifToggle){
+    notifToggle.addEventListener('change', async (ev)=>{
+      const enabled = ev.target.checked;
+      if(enabled && "Notification" in window){
+        await Notification.requestPermission();
+      }
+      session.hr.notifications = enabled;
+      const list = await sget('sys:hr_users', []);
+      const idx = list.findIndex(u=>u.username===session.hr.username);
+      if(idx>=0){ list[idx].notifications = enabled; await sset('sys:hr_users', list); }
+      toast(`Notifications ${enabled?'enabled':'disabled'}.`);
+    });
+  }
+
+  const pwForm = document.getElementById('hr-pw-form');
+  if(pwForm){
+    pwForm.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const currentPassword = fd.get('currentPassword');
+      const newPassword = fd.get('newPassword');
+      const confirmPassword = fd.get('confirmPassword');
+      const errBox = document.getElementById('hr-pw-error');
+      const okBox = document.getElementById('hr-pw-success');
+      errBox.innerHTML = ''; okBox.innerHTML = '';
+      if(currentPassword !== session.hr.password){
+        errBox.innerHTML = `<div class="error-box">Current password is incorrect.</div>`;
+        return;
+      }
+      if(newPassword !== confirmPassword){
+        errBox.innerHTML = `<div class="error-box">Passwords do not match.</div>`;
+        return;
+      }
+      const list = await sget('sys:hr_users', []);
+      const idx = list.findIndex(u=>u.username===session.hr.username);
+      if(idx===-1) return;
+      list[idx].password = newPassword;
+      await sset('sys:hr_users', list);
+      session.hr = list[idx];
+      await addAudit(session.hr.username, 'PASSWORD_CHANGED', 'User portal');
+      okBox.innerHTML = `<div class="hint-box" style="color:var(--success);background:var(--success-soft);"><b>Success.</b> Password updated successfully.</div>`;
+      ev.target.reset();
+    });
+  }
+}
+
+function bindEditorEvents(){
+  document.querySelectorAll('[data-etab]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ adminState.tab = btn.getAttribute('data-etab'); render(); });
+  });
+
+  const detailsForm = document.getElementById('details-form');
+  if(detailsForm){
+    detailsForm.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const e = adminState.draft;
+      e.unitId = fd.get('unitId');
+      e.committeeName = fd.get('committeeName').trim();
+      e.electionTitle = fd.get('electionTitle').trim();
+      e.instructions = fd.get('instructions').trim();
+      e.electionDate = fd.get('electionDate');
+      e.votingStart = fd.get('votingStart');
+      e.votingEnd = fd.get('votingEnd');
+      e.votingType = fd.get('votingType');
+      e.seats = parseInt(fd.get('seats')||'1',10) || 1;
+      e.eligibleVoters = fd.get('eligibleVoters') ? parseInt(fd.get('eligibleVoters'),10) : '';
+      const savedId = await persistElection(e, 'ELECTION_SAVED');
+      adminState.draft.id = savedId;
+      adminState.tab = 'nominees';
+      toast('Election details saved.');
+      render();
+    });
+  }
+
+  const addNomBtn = document.getElementById('add-nominee-btn');
+  if(addNomBtn){
+    addNomBtn.addEventListener('click', ()=>{
+      const e = adminState.draft;
+      e.nominees = e.nominees || [];
+      e.nominees.push({id:uid('nom'), name:'', cardNo:'', department:'', designation:'', photo:'', order:e.nominees.length});
+      render();
+    });
+  }
+  document.querySelectorAll('[data-remove-nom]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.getAttribute('data-remove-nom'),10);
+      adminState.draft.nominees.splice(i,1);
+      adminState.draft.nominees.forEach((n,idx)=>n.order=idx);
+      render();
+    });
+  });
+  document.querySelectorAll('[data-move-up]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.getAttribute('data-move-up'),10);
+      const arr = adminState.draft.nominees;
+      [arr[i-1],arr[i]] = [arr[i],arr[i-1]];
+      arr.forEach((n,idx)=>n.order=idx);
+      render();
+    });
+  });
+  document.querySelectorAll('[data-move-down]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.getAttribute('data-move-down'),10);
+      const arr = adminState.draft.nominees;
+      [arr[i+1],arr[i]] = [arr[i],arr[i+1]];
+      arr.forEach((n,idx)=>n.order=idx);
+      render();
+    });
+  });
+  document.querySelectorAll('.nom-editor-row').forEach(row=>{
+    const idx = parseInt(row.getAttribute('data-nom-idx'),10);
+    row.querySelectorAll('.nom-field').forEach(inp=>{
+      inp.addEventListener('input', ()=>{ adminState.draft.nominees[idx][inp.getAttribute('data-f')] = inp.value; });
+    });
+    const photoInput = row.querySelector('.nom-photo-input');
+    if(photoInput){
+      photoInput.addEventListener('change', (ev)=>{
+        const file = ev.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{ adminState.draft.nominees[idx].photo = reader.result; render(); };
+        reader.readAsDataURL(file);
+      });
+    }
+  });
+  const saveNomBtn = document.getElementById('save-nominees-btn');
+  if(saveNomBtn){
+    saveNomBtn.addEventListener('click', async ()=>{
+      const e = adminState.draft;
+      if(!e.id){ toast('Save details first.'); adminState.tab='details'; render(); return; }
+      await persistElection(e, 'NOMINEES_UPDATED');
+      toast('Nominees saved.');
+      render();
+    });
+  }
+  const saveDraftBtn = document.getElementById('save-draft-btn');
+  if(saveDraftBtn){
+    saveDraftBtn.addEventListener('click', async ()=>{
+      adminState.draft.status = 'draft';
+      await persistElection(adminState.draft, 'ELECTION_SAVED_DRAFT');
+      toast('Saved as draft.');
+      render();
+    });
+  }
+  const activateBtn = document.getElementById('activate-btn');
+  if(activateBtn){
+    activateBtn.addEventListener('click', async ()=>{
+      const e = adminState.draft;
+      if(!e.electionTitle || !e.votingStart || !e.votingEnd){ adminState.error='Complete Election Info first.'; render(); return; }
+      if(!e.nominees || e.nominees.length < 2){ adminState.error='Add at least 2 nominees.'; render(); return; }
+      if(!e.slug) e.slug = makeSlug();
+      e.status = new Date(e.votingStart).getTime() > Date.now() ? 'scheduled' : 'active';
+      await persistElection(e, 'ELECTION_ACTIVATED');
+      toast('Election activated.');
+      adminState.tab = 'link';
+      render();
+    });
+  }
+  const copyBtn = document.getElementById('copy-link-btn');
+  if(copyBtn){
+    copyBtn.addEventListener('click', ()=>{
+      const inp = document.getElementById('voting-link-input');
+      inp.select();
+      document.execCommand('copy');
+      toast('Link copied.');
+    });
+  }
+}
+
+async function persistElection(e, auditAction){
+  if(!e.id) e.id = uid('elec');
+  await sset('election:'+e.id, e);
+  const idx = await sget('sys:elections_index', []);
+  const i = idx.findIndex(x=>x.id===e.id);
+  const summary = {
+    id:e.id, slug:e.slug||null, unitId:e.unitId, committeeName:e.committeeName, electionTitle:e.electionTitle,
+    electionDate:e.electionDate, votingStart:e.votingStart, votingEnd:e.votingEnd, status:e.status,
+    nomineeCount:(e.nominees||[]).length, createdBy:e.createdBy
+  };
+  if(i>=0) idx[i]=summary; else idx.push(summary);
+  await sset('sys:elections_index', idx);
+  await addAudit(session.hr?session.hr.username:'admin', auditAction, e.electionTitle);
+  return e.id;
+}
+
+// ---------------------------------------------------------------- VOTING PORTAL (KIOSK)
+let voteState = { selected:[], done:false, receiptId:null };
+
+async function renderVoting(app, slugParam){
+  const idx = await sget('sys:elections_index', []);
+  const summary = idx.find(x=>x.slug===slugParam);
+  if(!summary){
+    app.innerHTML = statusScreen('🔎','Election Not Found','This voting link is invalid.');
+    return;
+  }
+  const e = await sget('election:'+summary.id);
+  const status = computedStatus(e);
+  if(status!=='active'){
+    app.innerHTML = statusScreen('⏸️','Voting Unavailable',`This election is currently ${status}.`);
+    return;
+  }
+  if(voteState.done){
+    app.innerHTML = statusScreen('✅','Vote Submitted','Thank you for participating.',`Receipt: ${voteState.receiptId}`, true);
+    document.getElementById('next-voter-btn').addEventListener('click', ()=>{
+      voteState = { selected:[], done:false, receiptId:null };
+      render();
+    });
+    return;
+  }
+  app.innerHTML = `<div class="vote-wrap">${ballotMarkup(e,{preview:false})}</div>`;
+  bindVotingEvents(e);
+}
+
+function statusScreen(icon,title,body,footnote,showNext){
+  return `
+    <div class="status-screen">
+      <div class="icon-circle" style="background:var(--navy-soft);">${icon}</div>
+      <h2>${esc(title)}</h2>
+      <p>${esc(body)}</p>
+      ${footnote?`<p class="mono" style="font-size:12px;margin-top:10px;color:var(--ink-muted);">${esc(footnote)}</p>`:''}
+      ${showNext?`<div style="margin-top:20px;"><button class="btn btn-gold" id="next-voter-btn">Next Voter →</button></div>`:''}
+    </div>
+  `;
+}
+
+function bindVotingEvents(e){
+  document.querySelectorAll('.nominee-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const id = card.getAttribute('data-nom-id');
+      voteState.selected = voteState.selected[0]===id ? [] : [id];
+      document.querySelectorAll('.nominee-card').forEach(c=>c.classList.toggle('selected', c.getAttribute('data-nom-id')===voteState.selected[0]));
+      const n = (e.nominees||[]).find(x=>x.id===voteState.selected[0]);
+      document.getElementById('sel-name-display').textContent = n ? n.name : 'None selected';
+      document.getElementById('submit-vote-btn').disabled = !n;
+    });
+  });
+  const submitBtn = document.getElementById('submit-vote-btn');
+  if(submitBtn){
+    submitBtn.addEventListener('click', async ()=>{
+      const votes = await sget('votes:'+e.id, []);
+      const voteId = uid('vote');
+      votes.push({ voteId, ts:new Date().toISOString(), nomineeIds: voteState.selected.slice() });
+      await sset('votes:'+e.id, votes);
+      voteState = { selected:[], done:true, receiptId:voteId };
+      await triggerNotification("New Vote Submitted", `A vote was cast in "${e.electionTitle}".`);
+      render();
+    });
+  }
+}
+
+// ---------------------------------------------------------------- ADMIN PORTAL (SUPER ADMIN & OTP)
+let resultState = { view:'overview', electionId:null };
+let otpSession = { active:false, generatedOtp:null, targetAdmin:null };
+
+async function renderResults(app){
+  if(!session.result){ renderResultLogin(app); return; }
+  await renderResultShell(app);
+}
+
+function renderResultLogin(app){
+  if(otpSession.active){
+    renderOtpResetView(app);
+    return;
+  }
+
+  app.innerHTML = `
+    <div class="center-wrap">
+      <div class="auth-card">
+        <div class="brand-row">
+          <div class="org-logo-badge dark">STONEMEN</div>
+          <div><div class="t1">Admin Portal</div><div class="t2">Super Administrator</div></div>
+        </div>
+        <div id="result-login-error"></div>
+        <form id="result-login-form">
+          <div class="field"><label>Username</label><input name="username" autocomplete="username" required></div>
+          <div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn-gold btn-full" type="submit">Log In</button>
+        </form>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+          <a href="#/" style="font-size:13px;color:var(--ink-muted);">← Portal selection</a>
+          <a href="javascript:void(0)" id="open-forgot-pw-btn" style="font-size:13px;color:var(--navy-2);font-weight:600;">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('result-login-form').addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    const username = fd.get('username').trim();
+    const password = fd.get('password');
+    const admins = await sget('sys:result_admins', []);
+    const a = admins.find(x=>x.username===username && x.password===password);
+    const errBox = document.getElementById('result-login-error');
+    if(!a){
+      errBox.innerHTML = `<div class="error-box">Invalid admin credentials.</div>`;
+      return;
+    }
+    session.result = a;
+    resultState = { view:'overview', electionId:null };
+    await addAudit(a.username, 'LOGIN_SUCCESS', 'Admin portal');
+    render();
+  });
+
+  document.getElementById('open-forgot-pw-btn').addEventListener('click', ()=>{
+    otpSession = { active:true, step:'request', generatedOtp:null, targetAdmin:null };
+    render();
+  });
+}
+
+function renderOtpResetView(app){
+  if(otpSession.step === 'request'){
+    app.innerHTML = `
+      <div class="center-wrap">
+        <div class="auth-card">
+          <div class="brand-row">
+            <div class="org-logo-badge dark">OTP AUTH</div>
+            <div><div class="t1">Password Reset</div><div class="t2">Admin Verification</div></div>
+          </div>
+          <p style="font-size:13.5px;color:var(--ink-muted);line-height:1.5;margin-bottom:16px;">Enter your registered Email ID or Phone Number to receive a 6-digit verification code.</p>
+          <div id="otp-req-error"></div>
+          <form id="otp-req-form">
+            <div class="field"><label>Registered Email or Phone</label><input name="identifier" required placeholder="admin@stonemen.com or phone"></div>
+            <button class="btn btn-gold btn-full" type="submit">Send OTP Code</button>
+          </form>
+          <div style="text-align:center;margin-top:16px;"><a href="javascript:void(0)" id="cancel-otp-btn" style="font-size:13px;color:var(--ink-muted);">← Back to Login</a></div>
+        </div>
+      </div>
+    `;
+    document.getElementById('cancel-otp-btn').addEventListener('click', ()=>{ otpSession.active=false; render(); });
+    document.getElementById('otp-req-form').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const iden = new FormData(ev.target).get('identifier').trim().toLowerCase();
+      const admins = await sget('sys:result_admins', []);
+      const a = admins.find(x=>(x.email&&x.email.toLowerCase()===iden)||(x.phone&&x.phone.replace(/\D/g,'')===iden.replace(/\D/g,'')));
+      if(!a){
+        document.getElementById('otp-req-error').innerHTML = `<div class="error-box">No admin account matched that email/phone.</div>`;
+        return;
+      }
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      otpSession = { active:true, step:'verify', generatedOtp:otp, targetAdmin:a };
+      toast(`[OTP Simulation]: Your code is ${otp}`);
+      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}`);
+      render();
+    });
+  } else if(otpSession.step === 'verify'){
+    app.innerHTML = `
+      <div class="center-wrap">
+        <div class="auth-card">
+          <div class="brand-row">
+            <div class="org-logo-badge dark">OTP VERIFY</div>
+            <div><div class="t1">Step 2 of 2</div><div class="t2">Enter OTP &amp; Reset</div></div>
+          </div>
+          <div style="background:var(--navy-soft);padding:10px 12px;border-radius:8px;font-size:13px;color:var(--navy-2);margin-bottom:14px;">
+            OTP sent to: <b>${esc(otpSession.targetAdmin.email || otpSession.targetAdmin.phone)}</b>
+          </div>
+          <div id="otp-verify-error"></div>
+          <form id="otp-verify-form">
+            <div class="field"><label>6-Digit OTP Code</label><input name="otpCode" class="mono" style="font-size:18px;letter-spacing:.2em;text-align:center;" maxlength="6" required placeholder="••••••"></div>
+            <div class="field"><label>New Password</label><input name="newPassword" type="password" required minlength="6" autocomplete="new-password"></div>
+            <div class="field"><label>Confirm New Password</label><input name="confirmPassword" type="password" required minlength="6" autocomplete="new-password"></div>
+            <button class="btn btn-gold btn-full" type="submit">Verify &amp; Update Password</button>
+          </form>
+          <div style="text-align:center;margin-top:16px;"><a href="javascript:void(0)" id="cancel-otp-btn2" style="font-size:13px;color:var(--ink-muted);">Cancel</a></div>
+        </div>
+      </div>
+    `;
+    document.getElementById('cancel-otp-btn2').addEventListener('click', ()=>{ otpSession.active=false; render(); });
+    document.getElementById('otp-verify-form').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const otpCode = fd.get('otpCode').trim();
+      const newPassword = fd.get('newPassword');
+      const confirmPassword = fd.get('confirmPassword');
+      const errBox = document.getElementById('otp-verify-error');
+      
+      if(otpCode !== otpSession.generatedOtp){
+        errBox.innerHTML = `<div class="error-box">Invalid OTP code. Please try again.</div>`;
+        return;
+      }
+      if(newPassword !== confirmPassword){
+        errBox.innerHTML = `<div class="error-box">Passwords do not match.</div>`;
+        return;
+      }
+      
+      const admins = await sget('sys:result_admins', []);
+      const idx = admins.findIndex(x=>x.username===otpSession.targetAdmin.username);
+      if(idx>=0){
+        admins[idx].password = newPassword;
+        await sset('sys:result_admins', admins);
+        await addAudit(admins[idx].username, 'PASSWORD_RESET_OTP', 'Admin password reset via OTP authentication');
+      }
+      otpSession.active = false;
+      toast('Password reset successfully. Please log in.');
+      render();
+    });
+  }
+}
+
+async function renderResultShell(app){
+  const idx = await sget('sys:elections_index', []);
+  const units = await sget('sys:units', []);
+  let body = '';
+  if(resultState.view==='overview') body = await resultOverviewHTML(idx, units);
+  else if(resultState.view==='units') body = await resultUnitsHTML(units);
+  else if(resultState.view==='hr') body = await resultHRUsersHTML(units);
+  else if(resultState.view==='account') body = await resultAccountDetailsHTML();
+  else if(resultState.view==='audit') body = await resultAuditHTML();
+
+  app.innerHTML = `
+    <div class="shell">
+      <div class="sidebar" style="background:#1a1f2e;">
+        <div class="org-header">
+          <div class="org-title">STONEMEN CRAFTS INDIA</div>
+          <div class="portal-title">Super Admin Portal</div>
+        </div>
+        <div class="side-user"><b>${esc(session.result.name)}</b>Full System Access</div>
+        <div class="navgroup">
+          <button class="navlink ${resultState.view==='overview'?'active':''}" data-rnav="overview"><span class="dot"></span>Elections &amp; Results</button>
+          <button class="navlink ${resultState.view==='units'?'active':''}" data-rnav="units"><span class="dot"></span>Manage Units</button>
+          <button class="navlink ${resultState.view==='hr'?'active':''}" data-rnav="hr"><span class="dot"></span>Manage HR Users</button>
+          <button class="navlink ${resultState.view==='account'?'active':''}" data-rnav="account"><span class="dot"></span>Account Details</button>
+          <button class="navlink ${resultState.view==='audit'?'active':''}" data-rnav="audit"><span class="dot"></span>Audit Logs</button>
+        </div>
+        <div class="sidebar-footer">
+          <button class="navlink" data-rnav="logout"><span class="dot"></span>Log Out</button>
+        </div>
+      </div>
+      <div class="main">${body}</div>
+    </div>
+  `;
+  bindResultEvents(units);
+}
+
+async function resultOverviewHTML(idx, units){
+  const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
+  return `
+    <div class="page-head">
+      <div><h1>Elections &amp; Results</h1><p>System-wide monitoring, live results, CSV and PDF report exports.</p></div>
+    </div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Election</th><th>Unit</th><th>Date</th><th>Status</th><th>Nominees</th><th style="text-align:right;">Actions</th></tr></thead>
+        <tbody>
+          ${idx.length? idx.map(e=>`
+            <tr>
+              <td><b>${esc(e.electionTitle)}</b><div style="font-size:12px;color:var(--ink-muted);">${esc(e.committeeName||'')}</div></td>
+              <td><span class="tag-unit">${esc(unitName(e.unitId))}</span></td>
+              <td>${fmtDate(e.electionDate)}</td>
+              <td>${statusBadge(computedStatus(e))}</td>
+              <td>${e.nomineeCount||0}</td>
+              <td style="text-align:right;white-space:nowrap;">
+                <button class="btn btn-gold btn-sm" data-view-results="${e.id}">📊 View &amp; Download Results</button>
+              </td>
+            </tr>
+          `).join('') : `<tr><td colspan="6"><div class="empty-state">No elections created.</div></td></tr>`}
+        </tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+// Download Results Modal (Live tally, CSV & PDF export)
+async function showResultsModal(electionId, units){
+  const e = await sget('election:'+electionId);
+  if(!e) return;
+  const votes = await sget('votes:'+electionId, []);
+  const unitName = (units.find(u=>u.id===e.unitId)||{}).name || e.unitId;
+  
+  const counts = {};
+  (e.nominees||[]).forEach(n => counts[n.id] = 0);
+  votes.forEach(v => {
+    (v.nomineeIds||[]).forEach(id => {
+      if(counts[id] !== undefined) counts[id]++;
+    });
+  });
+  const totalVotes = votes.length;
+  
+  const sortedNominees = (e.nominees||[]).map(n => {
+    const vCount = counts[n.id] || 0;
+    const pct = totalVotes > 0 ? ((vCount / totalVotes) * 100).toFixed(1) : '0.0';
+    return { ...n, votes: vCount, percentage: pct };
+  }).sort((a,b) => b.votes - a.votes);
+
+  const winner = sortedNominees.length > 0 && totalVotes > 0 ? sortedNominees[0] : null;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;">
+        <div>
+          <h3 style="margin:0 0 4px;font-size:20px;">${esc(e.electionTitle)}</h3>
+          <div style="font-size:13px;color:var(--ink-muted);">${esc(e.committeeName)} · ${esc(unitName)} · ${fmtDate(e.electionDate)}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="close-results-modal">✕ Close</button>
+      </div>
+
+      <div class="stat-row" style="margin-bottom:18px;">
+        <div class="stat-box"><div class="n">${totalVotes}</div><div class="l">Total Votes Cast</div></div>
+        <div class="stat-box"><div class="n">${sortedNominees.length}</div><div class="l">Nominees</div></div>
+        <div class="stat-box"><div class="n">${e.seats||1}</div><div class="l">Seats Available</div></div>
+      </div>
+
+      ${winner && winner.votes > 0 ? `
+        <div style="background:var(--gold-soft);border:1px solid #dcc47e;border-radius:10px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:10px;">
+          <div style="font-size:22px;">🏆</div>
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;font-weight:700;letter-spacing:.06em;color:var(--amber);">Current Leading Nominee</div>
+            <div style="font-size:15px;font-weight:700;color:var(--navy);">${esc(winner.name)} — ${winner.votes} votes (${winner.percentage}%)</div>
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="table-wrap" style="margin-bottom:18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Nominee</th>
+              <th>Card / Dept</th>
+              <th style="text-align:right;">Votes</th>
+              <th style="width:140px;">Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sortedNominees.map((n, idx) => `
+              <tr>
+                <td style="font-weight:700;color:var(--ink-muted);">#${idx+1}</td>
+                <td><b>${esc(n.name)}</b><div style="font-size:12px;color:var(--ink-muted);">${esc(n.designation||'—')}</div></td>
+                <td><div style="font-size:12px;">Card: ${esc(n.cardNo||'—')}</div><div style="font-size:12px;color:var(--ink-muted);">${esc(n.department||'—')}</div></td>
+                <td style="text-align:right;font-weight:700;font-size:15px;">${n.votes}</td>
+                <td>
+                  <div style="font-size:12px;font-weight:600;margin-bottom:2px;">${n.percentage}%</div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${n.percentage}%;"></div></div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions" style="border-top:1px solid var(--line);padding-top:16px;">
+        <button class="btn btn-outline" id="download-csv-btn">📥 Download Excel / CSV</button>
+        <button class="btn btn-primary" id="download-pdf-btn">🖨️ Download PDF / Print</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('close-results-modal').addEventListener('click', () => overlay.remove());
+
+  // Export CSV Action
+  document.getElementById('download-csv-btn').addEventListener('click', () => {
+    let csv = `\uFEFFRank,Nominee Name,Card No,Department,Designation,Votes,Percentage\n`;
+    sortedNominees.forEach((n, idx) => {
+      const row = [
+        idx + 1,
+        `"${(n.name||'').replace(/"/g, '""')}"`,
+        `"${(n.cardNo||'').replace(/"/g, '""')}"`,
+        `"${(n.department||'').replace(/"/g, '""')}"`,
+        `"${(n.designation||'').replace(/"/g, '""')}"`,
+        n.votes,
+        `"${n.percentage}%"`
+      ];
+      csv += row.join(',') + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Election_Results_${(e.electionTitle||'Report').replace(/\s+/g, '_')}_${fmtDate(e.electionDate)}.csv`;
+    link.click();
+    toast('CSV file downloaded.');
+  });
+
+  // Export / Print PDF Action
+  document.getElementById('download-pdf-btn').addEventListener('click', () => {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Election Results Report - ${esc(e.electionTitle)}</title>
+        <style>
+          body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 36px; color: #12203D; line-height: 1.5; }
+          .report-header { text-align: center; border-bottom: 2px solid #12203D; padding-bottom: 18px; margin-bottom: 24px; }
+          .report-header .org { font-size: 13px; font-weight: 700; color: #B08D2B; letter-spacing: 0.1em; text-transform: uppercase; }
+          .report-header h1 { margin: 6px 0; font-size: 22px; text-transform: uppercase; letter-spacing: 0.05em; }
+          .report-header .sub { font-size: 14px; color: #5B6472; }
+          .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; background: #F5F6F9; padding: 14px; border-radius: 8px; font-size: 13px; }
+          .meta-grid .item b { display: block; color: #5B6472; font-size: 11px; text-transform: uppercase; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px; }
+          th { background: #12203D; color: #ffffff; text-align: left; padding: 10px 12px; font-size: 12px; text-transform: uppercase; }
+          td { padding: 10px 12px; border-bottom: 1px solid #E1E4EA; }
+          tr:nth-child(even) td { background: #F9FAFC; }
+          .winner-box { background: #FFF9E6; border: 1.5px solid #B08D2B; padding: 14px; border-radius: 8px; margin-bottom: 24px; }
+          .signatures { display: flex; justify-content: space-between; margin-top: 60px; padding-top: 14px; }
+          .sig-line { width: 220px; border-top: 1.5px solid #12203D; text-align: center; font-size: 12px; padding-top: 6px; color: #5B6472; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <div class="report-header">
+          <div class="org">STONEMEN CRAFTS INDIA</div>
+          <h1>Committee Election Official Result Report</h1>
+          <div class="sub">${esc(e.committeeName)} — ${esc(unitName)}</div>
+        </div>
+        <div class="meta-grid">
+          <div class="item"><b>Election Title</b>${esc(e.electionTitle)}</div>
+          <div class="item"><b>Election Date</b>${fmtDate(e.electionDate)}</div>
+          <div class="item"><b>Total Votes Cast</b>${totalVotes}</div>
+        </div>
+        ${winner && winner.votes > 0 ? `
+          <div class="winner-box">
+            <strong style="color:#B08D2B;text-transform:uppercase;font-size:12px;display:block;">Leading / Winner Nominee:</strong>
+            <span style="font-size:16px;font-weight:bold;">${esc(winner.name)} (${esc(winner.department||'—')})</span> — ${winner.votes} votes (${winner.percentage}%)
+          </div>
+        ` : ''}
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Nominee Name</th>
+              <th>Card No</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th style="text-align:right;">Votes</th>
+              <th style="text-align:right;">Vote Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sortedNominees.map((n, idx) => `
+              <tr>
+                <td>#${idx+1}</td>
+                <td><b>${esc(n.name)}</b></td>
+                <td>${esc(n.cardNo||'—')}</td>
+                <td>${esc(n.department||'—')}</td>
+                <td>${esc(n.designation||'—')}</td>
+                <td style="text-align:right;font-weight:bold;">${n.votes}</td>
+                <td style="text-align:right;">${n.percentage}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div style="font-size:11px;color:#5B6472;margin-top:20px;">Report Generated On: ${new Date().toLocaleString()}</div>
+        <div class="signatures">
+          <div class="sig-line">Presiding Election Officer</div>
+          <div class="sig-line">HR Unit Representative</div>
+          <div class="sig-line">Super Administrator</div>
+        </div>
+        <script>
+          window.onload = function() { window.print(); }
+        <\/script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+  });
+}
+
+// Manage Units
+async function resultUnitsHTML(units){
+  return `
+    <div class="page-head"><div><h1>Manage Units</h1><p>Add and remove facility units dynamically.</p></div></div>
+    <div class="card">
+      <div class="table-wrap"><table><thead><tr><th>Unit Name</th><th>Unit ID</th><th style="text-align:right;">Actions</th></tr></thead>
+      <tbody>${units.length? units.map(u=>`
+        <tr>
+          <td><b>${esc(u.name)}</b></td>
+          <td class="mono">${esc(u.id)}</td>
+          <td style="text-align:right;">
+            <button class="btn btn-danger btn-sm" data-remove-unit="${u.id}">Remove Unit</button>
+          </td>
+        </tr>`).join('') : `<tr><td colspan="3" class="empty-state">No units registered.</td></tr>`}
+      </tbody></table></div>
+      <form id="add-unit-form" style="margin-top:20px;display:flex;gap:10px;align-items:flex-end;">
+        <div class="field" style="margin-bottom:0;flex:1;"><label>New Unit Name</label><input name="unitName" required placeholder="e.g. Unit 5 or Logistics Hub"></div>
+        <button class="btn btn-primary" type="submit">+ Add Unit</button>
+      </form>
+    </div>
+  `;
+}
+
+// Manage HR Users
+async function resultHRUsersHTML(units){
+  const hrUsers = await sget('sys:hr_users', []);
+  const unitName = id => (units.find(u=>u.id===id)||{}).name || id;
+  return `
+    <div class="page-head"><div><h1>Manage HR Users</h1><p>Full control to create, edit credentials/units, and remove HR accounts.</p></div></div>
+    <div class="card">
+      <div class="table-wrap"><table><thead><tr><th>Username</th><th>Full Name</th><th>Assigned Unit(s)</th><th style="text-align:right;">Actions</th></tr></thead>
+      <tbody>${hrUsers.length? hrUsers.map(u=>`
+        <tr>
+          <td class="mono"><b>${esc(u.username)}</b></td>
+          <td>${esc(u.name)}</td>
+          <td>${(u.unitIds||[]).map(id=>`<span class="tag-unit" style="margin-right:4px;">${esc(unitName(id))}</span>`).join('') || '—'}</td>
+          <td style="text-align:right;white-space:nowrap;">
+            <button class="btn btn-outline btn-sm" data-edit-hr="${esc(u.username)}">Edit</button>
+            <button class="btn btn-danger btn-sm" data-remove-hr="${esc(u.username)}">Remove</button>
+          </td>
+        </tr>`).join('') : `<tr><td colspan="4" class="empty-state">No HR users added.</td></tr>`}
+      </tbody></table></div>
+      
+      <h3 style="margin-top:24px;font-size:15px;">Add New HR User</h3>
+      <form id="add-hr-form" style="margin-top:10px;">
+        <div class="grid-3">
+          <div class="field"><label>Username</label><input name="username" required placeholder="hr_unit"></div>
+          <div class="field"><label>Full Name</label><input name="name" required placeholder="Jane Doe"></div>
+          <div class="field"><label>Initial Password</label><input name="password" required placeholder="••••••••"></div>
+        </div>
+        <div class="field"><label>Assign Unit(s)</label>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;">
+            ${units.map(u=>`<label style="display:flex;align-items:center;gap:6px;font-size:13.5px;"><input type="checkbox" name="unit" value="${u.id}"> ${esc(u.name)}</label>`).join('')}
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">+ Add HR User</button>
+      </form>
+    </div>
+  `;
+}
+
+// Account Details Tab
+async function resultAccountDetailsHTML(){
+  const admin = session.result;
+  return `
+    <div class="page-head"><div><h1>Account Details</h1><p>Edit Super Admin credentials, verification email, and OTP phone number.</p></div></div>
+    <div class="card" style="max-width:540px;">
+      <h2>Administrator Profile &amp; Verification</h2>
+      <div class="sub">Update your authentication details below.</div>
+      
+      <div class="toggle-wrap">
+        <div>
+          <b style="font-size:13.5px;">Browser Notifications</b>
+          <div style="font-size:12px;color:var(--ink-muted);">Receive real-time alerts on system activity &amp; votes</div>
+        </div>
+        <input type="checkbox" id="admin-notif-toggle" ${admin.notifications!==false?'checked':''} style="width:20px;height:20px;cursor:pointer;">
+      </div>
+
+      <div id="admin-account-error"></div>
+      <div id="admin-account-success"></div>
+      <form id="admin-account-form">
+        <div class="field"><label>Username</label><input name="username" value="${esc(admin.username)}" required></div>
+        <div class="field"><label>Display Name</label><input name="name" value="${esc(admin.name)}" required></div>
+        <div class="field"><label>Email ID <span style="text-transform:none;font-weight:400;">(Account Verification &amp; OTP)</span></label><input name="email" type="email" value="${esc(admin.email||'')}" placeholder="admin@stonemen.com" required></div>
+        <div class="field"><label>Phone Number <span style="text-transform:none;font-weight:400;">(OTP Authentication)</span></label><input name="phone" type="tel" value="${esc(admin.phone||'')}" placeholder="+91 98765 43210" required></div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:18px 0;">
+        <div class="field"><label>New Password <span style="text-transform:none;font-weight:400;">(Leave blank to keep unchanged)</span></label><input name="password" type="password" placeholder="Enter new password"></div>
+        <button class="btn btn-gold" type="submit">Save Changes</button>
+      </form>
+    </div>
+  `;
+}
+
+// Audit Logs with Select, Delete Selected, and Clear All
+async function resultAuditHTML(){
+  const log = await sget('sys:audit_log', []);
+  return `
+    <div class="page-head">
+      <div><h1>Audit Logs</h1><p>System activity records and audit management.</p></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger btn-sm" id="delete-selected-logs-btn">Delete Selected</button>
+        <button class="btn btn-outline btn-sm" id="clear-all-logs-btn">Clear All Logs</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="select-all-logs" style="cursor:pointer;">
+        <label for="select-all-logs" style="font-size:13px;font-weight:600;cursor:pointer;">Select All Entries</label>
+      </div>
+      <div id="audit-log-container">
+        ${log.length? log.map((l, idx)=>`
+          <div class="audit-item" data-log-idx="${idx}">
+            <input type="checkbox" class="audit-checkbox" data-log-id="${l.id||idx}" style="cursor:pointer;">
+            <div class="ts">${fmtDateTime(l.ts)}</div>
+            <div style="flex:1;"><b>${esc(l.actor)}</b> — ${esc(l.action)} <span style="color:var(--ink-muted);">(${esc(l.detail)})</span></div>
+          </div>
+        `).join('') : `<div class="empty-state">No audit logs recorded.</div>`}
+      </div>
+    </div>
+  `;
+}
+
+function bindResultEvents(units){
+  document.querySelectorAll('[data-rnav]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const nav = btn.getAttribute('data-rnav');
+      if(nav==='logout'){ addAudit(session.result.username,'LOGOUT','Admin portal'); session.result=null; location.hash='#/results'; render(); return; }
+      resultState.view = nav;
+      render();
+    });
+  });
+
+  // Notifications Toggle for Admin
+  const adminNotifToggle = document.getElementById('admin-notif-toggle');
+  if(adminNotifToggle){
+    adminNotifToggle.addEventListener('change', async (ev)=>{
+      const enabled = ev.target.checked;
+      if(enabled && "Notification" in window){
+        await Notification.requestPermission();
+      }
+      session.result.notifications = enabled;
+      const admins = await sget('sys:result_admins', []);
+      const idx = admins.findIndex(a=>a.username===session.result.username);
+      if(idx>=0){ admins[idx].notifications = enabled; await sset('sys:result_admins', admins); }
+      toast(`Notifications ${enabled?'enabled':'disabled'}.`);
+    });
+  }
+
+  // Audit Log Selection and Bulk Deletion
+  const selectAllLogs = document.getElementById('select-all-logs');
+  if(selectAllLogs){
+    selectAllLogs.addEventListener('change', (ev)=>{
+      document.querySelectorAll('.audit-checkbox').forEach(cb => cb.checked = ev.target.checked);
+    });
+  }
+
+  const deleteSelectedBtn = document.getElementById('delete-selected-logs-btn');
+  if(deleteSelectedBtn){
+    deleteSelectedBtn.addEventListener('click', async ()=>{
+      const checked = Array.from(document.querySelectorAll('.audit-checkbox:checked'));
+      if(!checked.length){ toast('No logs selected.'); return; }
+      if(!confirm(`Delete ${checked.length} selected audit log(s)?`)) return;
+      
+      const log = await sget('sys:audit_log', []);
+      const idsToDelete = new Set(checked.map(cb => cb.getAttribute('data-log-id')));
+      const newLog = log.filter((l, idx) => !idsToDelete.has(l.id||String(idx)));
+      
+      await sset('sys:audit_log', newLog);
+      toast('Selected logs deleted.');
+      render();
+    });
+  }
+
+  const clearAllLogsBtn = document.getElementById('clear-all-logs-btn');
+  if(clearAllLogsBtn){
+    clearAllLogsBtn.addEventListener('click', async ()=>{
+      if(!confirm('Are you sure you want to clear the entire audit log history?')) return;
+      await sset('sys:audit_log', []);
+      toast('All audit logs cleared.');
+      render();
+    });
+  }
+
+  // View & Download Results Modal Trigger
+  document.querySelectorAll('[data-view-results]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const electionId = btn.getAttribute('data-view-results');
+      showResultsModal(electionId, units);
+    });
+  });
+
+  const addUnitForm = document.getElementById('add-unit-form');
+  if(addUnitForm){
+    addUnitForm.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const name = new FormData(ev.target).get('unitName').trim();
+      if(!name) return;
+      const list = await sget('sys:units', []);
+      list.push({id: uid('u'), name});
+      await sset('sys:units', list);
+      await addAudit(session.result.username, 'UNIT_ADDED', name);
+      toast('Unit added.');
+      render();
+    });
+  }
+
+  document.querySelectorAll('[data-remove-unit]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const unitId = btn.getAttribute('data-remove-unit');
+      const list = await sget('sys:units', []);
+      const unit = list.find(u=>u.id===unitId);
+      if(!unit) return;
+      if(!confirm(`Are you sure you want to remove unit "${unit.name}"?`)) return;
+      const newList = list.filter(u=>u.id!==unitId);
+      await sset('sys:units', newList);
+      await addAudit(session.result.username, 'UNIT_REMOVED', unit.name);
+      toast(`Unit "${unit.name}" removed successfully.`);
+      render();
+    });
+  });
+
+  const addHrForm = document.getElementById('add-hr-form');
+  if(addHrForm){
+    addHrForm.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const username = fd.get('username').trim();
+      const unitIds = fd.getAll('unit');
+      const list = await sget('sys:hr_users', []);
+      if(list.some(u=>u.username===username)){ toast('Username already exists.'); return; }
+      list.push({username, name:fd.get('name').trim(), password:fd.get('password'), unitIds, notifications:true});
+      await sset('sys:hr_users', list);
+      await addAudit(session.result.username, 'HR_USER_ADDED', username);
+      toast('HR user added.');
+      render();
+    });
+  }
+
+  document.querySelectorAll('[data-edit-hr]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      showEditHrModal(btn.getAttribute('data-edit-hr'), units);
+    });
+  });
+
+  document.querySelectorAll('[data-remove-hr]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const username = btn.getAttribute('data-remove-hr');
+      if(!confirm(`Are you sure you want to remove HR user "${username}"?`)) return;
+      let list = await sget('sys:hr_users', []);
+      list = list.filter(u=>u.username!==username);
+      await sset('sys:hr_users', list);
+      await addAudit(session.result.username, 'HR_USER_REMOVED', username);
+      toast('HR user removed.');
+      render();
+    });
+  });
+
+  const adminAccountForm = document.getElementById('admin-account-form');
+  if(adminAccountForm){
+    adminAccountForm.addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const username = fd.get('username').trim();
+      const name = fd.get('name').trim();
+      const email = fd.get('email').trim();
+      const phone = fd.get('phone').trim();
+      const newPassword = fd.get('password');
+
+      const errBox = document.getElementById('admin-account-error');
+      const okBox = document.getElementById('admin-account-success');
+      errBox.innerHTML = ''; okBox.innerHTML = '';
+
+      const admins = await sget('sys:result_admins', []);
+      const idx = admins.findIndex(a=>a.username===session.result.username);
+      if(idx===-1) return;
+
+      admins[idx].username = username;
+      admins[idx].name = name;
+      admins[idx].email = email;
+      admins[idx].phone = phone;
+      if(newPassword && newPassword.trim().length > 0){
+        admins[idx].password = newPassword.trim();
+      }
+
+      await sset('sys:result_admins', admins);
+      session.result = admins[idx];
+      await addAudit(username, 'ADMIN_ACCOUNT_UPDATED', 'Credentials & verification info updated');
+      okBox.innerHTML = `<div class="hint-box" style="color:var(--success);background:var(--success-soft);"><b>Success.</b> Admin account details updated.</div>`;
+      toast('Admin account updated.');
+    });
+  }
+}
+
+function showEditHrModal(username, units){
+  (async ()=>{
+    const hrUsers = await sget('sys:hr_users', []);
+    const user = hrUsers.find(u=>u.username===username);
+    if(!user) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <h3>Edit HR User</h3>
+        <div id="edit-hr-error"></div>
+        <form id="edit-hr-form">
+          <div class="field"><label>Username</label><input name="username" value="${esc(user.username)}" required></div>
+          <div class="field"><label>Full Name</label><input name="name" value="${esc(user.name)}" required></div>
+          <div class="field"><label>Password</label><input name="password" value="${esc(user.password)}" required></div>
+          <div class="field"><label>Assign Unit(s)</label>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;">
+              ${units.map(u=>`<label style="display:flex;align-items:center;gap:6px;font-size:13.5px;"><input type="checkbox" name="unit" value="${u.id}" ${(user.unitIds||[]).includes(u.id)?'checked':''}> ${esc(u.name)}</label>`).join('')}
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-outline" type="button" id="cancel-edit-hr">Cancel</button>
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('cancel-edit-hr').addEventListener('click', ()=>overlay.remove());
+    document.getElementById('edit-hr-form').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const fd = new FormData(ev.target);
+      const newUsername = fd.get('username').trim();
+      const errBox = document.getElementById('edit-hr-error');
+      const list = await sget('sys:hr_users', []);
+      if(newUsername !== username && list.some(u=>u.username===newUsername)){
+        errBox.innerHTML = `<div class="error-box">That username is already taken.</div>`;
+        return;
+      }
+      const u = list.find(x=>x.username===username);
+      if(!u) return;
+      u.username = newUsername;
+      u.name = fd.get('name').trim();
+      u.password = fd.get('password');
+      u.unitIds = fd.getAll('unit');
+      await sset('sys:hr_users', list);
+      await addAudit(session.result.username, 'HR_USER_UPDATED', newUsername);
+      overlay.remove();
+      toast('HR user updated.');
+      render();
+    });
+  })();
+}
+
+boot();
+</script>
+</body>
+</html>
