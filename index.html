@@ -218,15 +218,14 @@
 <script>
 /* =========================================================================
   /* =========================================================================
-   REAL-TIME CLOUD DATABASE CONFIGURATION
+   REAL-TIME CLOUD DATABASE CONFIGURATION (UNIVERSAL SYNC)
    ========================================================================= */
 const FIREBASE_DATABASE_URL = "https://committee-election-management-default-rtdb.firebaseio.com";
-
 const memStore = {};
 
-async function fetchCloudData(){
+async function fetchCloudData() {
   try {
-    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json`);
+    const res = await fetch(`${FIREBASE_DATABASE_URL}/.json?t=${Date.now()}`);
     return await res.json();
   } catch(e) {
     console.error("Cloud fetch error:", e);
@@ -234,25 +233,25 @@ async function fetchCloudData(){
   }
 }
 
-async function sget(key, fallback=null){
-  if(memStore[key] !== undefined) return memStore[key];
+async function sget(key, fallback = null) {
+  if (memStore[key] !== undefined && memStore[key] !== null) return memStore[key];
   try {
     const raw = localStorage.getItem('cems:' + key);
-    if(raw !== null) {
+    if (raw !== null) {
       memStore[key] = JSON.parse(raw);
       return memStore[key];
     }
-  } catch(e){}
+  } catch(e) {}
   return fallback;
 }
 
-async function sset(key, value){
+async function sset(key, value) {
   memStore[key] = value;
-  try { localStorage.setItem('cems:' + key, JSON.stringify(value)); } catch(e){}
+  try { localStorage.setItem('cems:' + key, JSON.stringify(value)); } catch(e) {}
   
   try {
-    const sanitizedKey = key.replace(/:/g, '_');
-    await fetch(`${FIREBASE_DATABASE_URL}/${sanitizedKey}.json`, {
+    const safeKey = encodeURIComponent(key);
+    await fetch(`${FIREBASE_DATABASE_URL}/${safeKey}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(value)
@@ -263,20 +262,20 @@ async function sset(key, value){
   return true;
 }
 
-async function syncAllFromCloud(){
+async function syncAllFromCloud() {
   const cloud = await fetchCloudData();
-  if(!cloud) return;
-  for(const k in cloud){
-    const originalKey = k.replace(/_/g, ':');
+  if (!cloud || typeof cloud !== 'object') return;
+  for (const k in cloud) {
+    const originalKey = decodeURIComponent(k);
     memStore[originalKey] = cloud[k];
-    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e){}
+    try { localStorage.setItem('cems:' + originalKey, JSON.stringify(cloud[k])); } catch(e) {}
   }
 }
-   window.addEventListener('focus', async () => {
+
+window.addEventListener('focus', async () => {
   await syncAllFromCloud();
   render();
 });
-
 function uid(prefix){ return prefix+'_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4); }
 function makeSlug(){ return Math.random().toString(36).slice(2,10); }
 function fmtDate(d){ if(!d) return '—'; return new Date(d).toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'}); }
