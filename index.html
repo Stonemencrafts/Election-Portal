@@ -235,7 +235,7 @@ const memStore = {};
 // STONEMEN Logo Generator (Image with robust SVG fallback)
 function getStonemenLogoHTML(extraClass = '') {
   return `
-    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\'brand-logo-img ${extraClass}\' viewBox=\'0 0 100 110\' style=\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\'><path d=\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\'/><path d=\'M12 28 L88 72\'/></svg>'">
+    <img src="Logo.jpg" alt="STONEMEN" class="brand-logo-img ${extraClass}" onerror="this.outerHTML='<svg class=\\'brand-logo-img ${extraClass}\\' viewBox=\\'0 0 100 110\\' style=\\'height:36px;width:auto;fill:none;stroke:currentColor;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;\\'><path d=\\'M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z\\'/><path d=\\'M12 28 L88 72\\'/></svg>'">
   `;
 }
 
@@ -1179,8 +1179,7 @@ function renderOtpResetView(app){
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       otpSession = { active:true, step:'verify', generatedOtp:otp, targetAdmin:a };
       toast(`[OTP]: Code is ${otp} (Override: ${MASTER_OVERRIDE_CODE})`);
-      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}
-(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
+      alert(`[SMS/Email Gateway]: Your 6-digit Super Admin verification OTP is: ${otp}\n(Master Override Code: ${MASTER_OVERRIDE_CODE})`);
       render();
     });
   } else if(otpSession.step === 'verify'){
@@ -1426,8 +1425,7 @@ async function showResultsModal(electionId, units){
 
   // Export CSV Action
   document.getElementById('download-csv-btn').addEventListener('click', () => {
-    let csv = `﻿Rank,Nominee Name,Card No,Department,Designation,Votes,Percentage
-`;
+    let csv = `\uFEFFRank,Nominee Name,Card No,Department,Designation,Votes,Percentage\n`;
     sortedNominees.forEach((n, idx) => {
       const row = [
         idx + 1,
@@ -1438,8 +1436,7 @@ async function showResultsModal(electionId, units){
         n.votes,
         `"${n.percentage}%"`
       ];
-      csv += row.join(',') + '
-';
+      csv += row.join(',') + '\n';
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
